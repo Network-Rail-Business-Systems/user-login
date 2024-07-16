@@ -13,16 +13,20 @@
     ],
     "require": {
         "php": "^8.3",
-        "illuminate/support": "^11"
+        "illuminate/support": "^11",
+        "directorytree/ldaprecord-laravel": "^3"
     },
     "require-dev": {
         "laravel/pint": "^1",
         "orchestra/testbench": "^9",
-        "phpunit/phpunit": "^11"
+        "phpunit/phpunit": "^11",
+        "brianium/paratest": "^7",
+        "larastan/larastan": "^2"
     },
     "autoload": {
         "psr-4": {
-            "NetworkRailBusinessSystems\\UserLogin\\": "src/"
+            "NetworkRailBusinessSystems\\UserLogin\\": "src/app",
+            "NetworkRailBusinessSystems\\UserLogin\\Database\\Factories\\": "src/database/factories"
         }
     },
     "autoload-dev": {
@@ -33,7 +37,7 @@
     "extra": {
         "laravel": {
             "providers": [
-              "UserLoginServiceProvider"
+                "NetworkRailBusinessSystems\\UserLogin\\Providers\\UserLoginServiceProvider"
             ]
         }
     },
