@@ -14,6 +14,7 @@
     "require": {
         "php": "^8.3",
         "illuminate/support": "^11",
+        "anthonyedmonds/govuk-laravel": "^4",
         "directorytree/ldaprecord-laravel": "^3"
     },
     "require-dev": {
@@ -21,7 +22,8 @@
         "orchestra/testbench": "^9",
         "phpunit/phpunit": "^11",
         "brianium/paratest": "^7",
-        "larastan/larastan": "^2"
+        "larastan/larastan": "^2",
+        "networkrailbusinesssystems/badges": "^1"
     },
     "autoload": {
         "psr-4": {

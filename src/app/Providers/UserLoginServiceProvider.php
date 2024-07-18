@@ -4,7 +4,7 @@ namespace NetworkRailBusinessSystems\UserLogin\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use NetworkRailBusinessSystems\UserLogin\Http\Controllers\LoginController;
+use NetworkRailBusinessSystems\UserLogin\Http\Controllers\Auth\LoginController;
 
 class UserLoginServiceProvider extends ServiceProvider
 {
@@ -58,6 +58,7 @@ class UserLoginServiceProvider extends ServiceProvider
                 });
         });
     }
+
    protected function bootViews(): void
    {
        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'user-login');

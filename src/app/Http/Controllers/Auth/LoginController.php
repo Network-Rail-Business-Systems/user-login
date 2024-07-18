@@ -1,0 +1,127 @@
+<?php
+
+namespace NetworkRailBusinessSystems\UserLogin\Http\Controllers\Auth;
+
+
+use AnthonyEdmonds\GovukLaravel\Helpers\GovukPage;
+use AnthonyEdmonds\GovukLaravel\Helpers\GovukQuestion;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use LdapRecord\Models\ActiveDirectory\User as LdapUser;
+use NetworkRailBusinessSystems\UserLogin\Http\Requests\Auth\LoginRequest;
+use NetworkRailBusinessSystems\UserLogin\Models\User;
+
+class LoginController extends Controller
+{
+    public function index(): View
+    {
+        $view = config('user-login.view');
+
+        $questions = [];
+
+        $questions = [
+           'username' =>  [
+               'name' => 'username',
+               'label' => 'What is your username?',
+               'hint' => "The username you use to access your Windows device, such as jdoe3.",
+               ],
+            'password' =>  [
+                'name' => 'password',
+                'label' => 'What is your password?',
+                'hint' => "The password you use to access your Windows device.",
+            ],
+        ];
+
+        $action = route('login');
+        $buttonLabel = 'Sign in';
+
+        return $view === 'gov-uk-login'
+            ? GovukPage::questions(
+                'Sign in',
+                [
+                    GovukQuestion::input($questions['username']['label'], $questions['username']['name'])
+                        ->hint($questions['username']['hint'])
+                        ->width(20),
+
+                    GovukQuestion::input($questions['password']['label'], $questions['password']['name'])
+                        ->hint($questions['password']['hint'])
+                        ->width(20),
+                ],
+                $buttonLabel,
+                $action,
+                null,
+                'post',
+                "user-login::$view"
+            )
+            : view("user-login::$view", compact('questions', 'action', 'buttonLabel'));
+    }
+
+    public function signIn(LoginRequest $request): RedirectResponse
+    {
+        $details = [
+            'samaccountname' => strtolower($request->username),
+            'password' => $request->password,
+        ];
+
+        if ($this->syncExistingUser($details['samaccountname']) === false) {
+            return $this->loginFailed($details['samaccountname']);
+        }
+
+        return Auth::attempt($details, true) === true
+            ? $this->loginSucceeded()
+            : $this->loginFailed($details['samaccountname']);
+    }
+
+    public function signOut(): RedirectResponse
+    {
+        Auth::logout();
+
+        return redirect()->route('login');
+    }
+
+    protected function syncExistingUser(string $username): bool
+    {
+        $ldapUser = LdapUser::query()
+            ->where('samaccountname', '=', $username)
+            ->first();
+
+        if ($ldapUser === null) {
+            return false;
+        }
+
+        User::query()
+            ->where('username', '=', $username)
+            ->orWhere('email', '=', $ldapUser->getAttributeValue('mail'))
+            ->limit(1)
+            ->update([
+                'username' => $username,
+                'email' => $ldapUser->getAttributeValue('mail'),
+            ]);
+
+        return true;
+    }
+
+    protected function loginFailed(string $username): RedirectResponse
+    {
+        flash('Sign in failed; please check your username and password and try again')->error();
+
+        return redirect()
+            ->route('login')
+            ->withInput([
+                'username' => $username,
+            ]);
+    }
+
+    protected function loginSucceeded(): RedirectResponse
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $user->touch();
+
+        flash('You have successfully signed in')->success();
+
+        return redirect()->intended();
+    }
+}
