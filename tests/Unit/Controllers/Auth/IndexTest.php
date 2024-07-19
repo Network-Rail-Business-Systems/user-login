@@ -56,15 +56,15 @@ class IndexTest extends TestCase
         $this->assertInstanceOf(View::class, $this->response);
 
         $this->assertEquals([
-            'username' => [
-                    'name' => 'username',
-                    'label' => 'What is your username?',
-                    'hint' => "The username you use to access your Windows device, such as jdoe3.",
+            [
+                'name' => 'username',
+                'label' => 'What is your username?',
+                'hint' => "The username you use to access your Windows device, such as jdoe3.",
             ],
-            'password' => [
-                    'name' => 'password',
-                    'label' => 'What is your password?',
-                    'hint' => "The password you use to access your Windows device.",
+            [
+                'name' => 'password',
+                'label' => 'What is your password?',
+                'hint' => "The password you use to access your Windows device.",
             ]],
             $this->response->getData()['questions']
         );

@@ -1,7 +1,7 @@
 <?php
 
-// Default view set to gov.uk template
-// Other ui can edit other-login blade
+// Set the default view to use the gov.uk template
+// Other UIs can modify the login blade as needed
 return [
     'view' => 'gov-uk-login',
 ];

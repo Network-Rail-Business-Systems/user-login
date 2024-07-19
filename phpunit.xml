@@ -15,7 +15,8 @@
     </testsuite>
   </testsuites>
   <php>
-    <env name="APP_ENV" value="local"/>
+    <env name="APP_ENV" value="testing"/>
+    <env name="ENV_FILE" value=".env.testing"/>
     <env name="APP_DEBUG" value="false"/>
     <env name="CACHE_DRIVER" value="array"/>
     <env name="SESSION_DRIVER" value="array"/>

@@ -14,6 +14,10 @@ class UserLoginServiceProvider extends ServiceProvider
             __DIR__ . '/../../config/user-login.php',
             'user-login'
         );
+        $this->mergeConfigFrom(
+            __DIR__ . '/../../config/ldap.php', 'ldap'
+        );
+
     }
 
     public function boot(): void

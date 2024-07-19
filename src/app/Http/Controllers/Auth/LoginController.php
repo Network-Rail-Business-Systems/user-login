@@ -19,19 +19,17 @@ class LoginController extends Controller
     {
         $view = config('user-login.view');
 
-        $questions = [];
-
         $questions = [
-           'username' =>  [
+           [
                'name' => 'username',
                'label' => 'What is your username?',
                'hint' => "The username you use to access your Windows device, such as jdoe3.",
-               ],
-            'password' =>  [
+           ],
+           [
                 'name' => 'password',
                 'label' => 'What is your password?',
                 'hint' => "The password you use to access your Windows device.",
-            ],
+           ],
         ];
 
         $action = route('login');
@@ -41,12 +39,12 @@ class LoginController extends Controller
             ? GovukPage::questions(
                 'Sign in',
                 [
-                    GovukQuestion::input($questions['username']['label'], $questions['username']['name'])
-                        ->hint($questions['username']['hint'])
+                    GovukQuestion::input($questions[0]['label'], $questions[0]['name'])
+                        ->hint($questions[0]['hint'])
                         ->width(20),
 
-                    GovukQuestion::input($questions['password']['label'], $questions['password']['name'])
-                        ->hint($questions['password']['hint'])
+                    GovukQuestion::input($questions[1]['label'], $questions[1]['name'])
+                        ->hint($questions[1]['hint'])
                         ->width(20),
                 ],
                 $buttonLabel,
