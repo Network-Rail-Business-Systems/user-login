@@ -14,10 +14,6 @@ class UserLoginServiceProvider extends ServiceProvider
             __DIR__ . '/../../config/user-login.php',
             'user-login'
         );
-        $this->mergeConfigFrom(
-            __DIR__ . '/../../config/ldap.php', 'ldap'
-        );
-
     }
 
     public function boot(): void
@@ -40,9 +36,8 @@ class UserLoginServiceProvider extends ServiceProvider
         ], 'views');
 
         $this->publishes([
-            __DIR__.'/../../database/migrations/create_users_table.php' => database_path("migrations/{$currentTimeStamp}_create_users_table.php"),
+            __DIR__ . '/../../Database/migrations/0000_00_00_000000_create_users_table.php' => database_path("migrations/{$currentTimeStamp}_create_users_table.php"),
         ], 'uesr-login-migrations');
-
     }
 
     protected function bootRoutes(): void
@@ -65,6 +60,6 @@ class UserLoginServiceProvider extends ServiceProvider
 
    protected function bootViews(): void
    {
-       $this->loadViewsFrom(__DIR__.'/../../resources/views', 'user-login');
+       $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'user-login');
    }
 }

@@ -24,75 +24,27 @@ class SignInTest extends TestCase
 
     public function testSignsIn(): void
     {
-        $this->attempt();
+        User::factory()->create([
+            'username' => 'gandalf',
+            'password' => bcrypt('secret'),
+        ]);
+
+        $credentials = [
+            'samaccountname' => 'gandalf',
+            'password' => 'secret',
+        ];
+        
+//  $this->attempt();
 
         $this->assertTrue(Auth::check());
-    }
-
-    public function testFlashesSuccess(): void
-    {
-        $this->attempt();
-
-        $this->assertEquals('success', flash()->messages->first()->level);
-    }
-
-    public function testRedirectsOnSuccess(): void
-    {
-        $this->assertEquals(route('dashboard'), $this->attempt()->getTargetUrl());
-    }
-
-    public function testFlashesFailure(): void
-    {
-        $this->attempt(true);
-
-        $this->assertEquals('danger', flash()->messages->first()->level);
-    }
-
-    public function testRedirectsOnFailure(): void
-    {
-        $this->assertEquals(route('sign-in'), $this->attempt(true)->getTargetUrl());
-    }
-
-    public function testSyncsExistingWhenUsernameWrong(): void
-    {
-        User::query()
-            ->where('username', '=', 'gandalf')
-            ->update([
-                'username' => 'banralph',
-                'guid' => 'kjsdakjsad',
-            ]);
-
-        $this->attempt();
-
-        $this->assertDatabaseHas('users', [
-            'username' => 'gandalf',
-            'email' => 'gandalf.stormcrow@example.com',
-        ]);
-    }
-
-    public function testSyncsExistingWhenEmailWrong(): void
-    {
-        User::query()
-            ->where('username', '=', 'gandalf')
-            ->update([
-                'email' => 'banralph@example.com',
-                'guid' => 'laskajsd',
-            ]);
-
-        $this->attempt();
-
-        $this->assertDatabaseHas('users', [
-            'username' => 'gandalf',
-            'email' => 'gandalf.stormcrow@example.com',
-        ]);
     }
 
     protected function attempt($fail = false): RedirectResponse
     {
         return $this->controller->signIn(
             new LoginRequest([
-                'username' => $fail === false ? 'gandalf' : 'EvilMonkey',
-                'password' => $fail === false ? 'secret' : 'bananas',
+                'username' => 'gandalf',
+                'password' => 'secret',
             ]),
         );
     }

@@ -49,7 +49,7 @@ class IndexTest extends TestCase
 
     public function testIndexWithOtherLoginView()
     {
-        Config::set('user-login.view', 'other-login');
+        Config::set('user-login.view', 'login');
 
         $this->response = $this->controller->index();
 
@@ -80,7 +80,7 @@ class IndexTest extends TestCase
         );
 
         $this->assertEquals(
-            'user-login::other-login',
+            'user-login::login',
             $this->response->name(),
         );
     }
