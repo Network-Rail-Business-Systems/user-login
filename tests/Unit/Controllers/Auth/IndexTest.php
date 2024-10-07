@@ -18,7 +18,6 @@ class IndexTest extends TestCase
         parent::setUp();
 
         $this->controller = new LoginController();
-
     }
 
     public function testIndexWithGovUkLoginView()

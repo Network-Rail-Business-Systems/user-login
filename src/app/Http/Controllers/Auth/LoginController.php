@@ -19,6 +19,10 @@ class LoginController extends Controller
     {
         $view = config('user-login.view');
 
+        $action = route('login');
+
+        $buttonLabel = 'Sign in';
+
         $questions = [
            [
                'name' => 'username',
@@ -31,9 +35,6 @@ class LoginController extends Controller
                 'hint' => "The password you use to access your Windows device.",
            ],
         ];
-
-        $action = route('login');
-        $buttonLabel = 'Sign in';
 
         return $view === 'gov-uk-login'
             ? GovukPage::questions(
@@ -103,7 +104,7 @@ class LoginController extends Controller
 
     protected function loginFailed(string $username): RedirectResponse
     {
-//        flash('Sign in failed; please check your username and password and try again')->error();
+        flash('Sign in failed; please check your username and password and try again')->error();
 
         return redirect()
             ->route('login')

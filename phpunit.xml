@@ -27,5 +27,8 @@
     <include>
       <directory suffix=".php">src/app</directory>
     </include>
+    <exclude>
+      <directory>src/app/Http/Requests</directory>
+    </exclude>
   </source>
 </phpunit>

@@ -2,39 +2,45 @@
 
 namespace NetworkRailBusinessSystems\UserLogin\Tests;
 
+use Illuminate\Auth\Events\Attempting;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Config;
-use LdapRecord\Models\DirectoryServer\User as LdapUser;
+use Illuminate\Support\Facades\Event;
+use Laracasts\Flash\FlashServiceProvider;
+use LdapRecord\Connection;
+use LdapRecord\Container;
+use LdapRecord\Laravel\LdapAuthServiceProvider;
+use LdapRecord\Models\ActiveDirectory\User as LdapUser;
 use LdapRecord\Laravel\Testing\DirectoryEmulator;
 use NetworkRailBusinessSystems\UserLogin\Models\User;
-use NetworkRailBusinessSystems\UserLogin\Providers\CustomServiceProvider;
 use NetworkRailBusinessSystems\UserLogin\Providers\UserLoginServiceProvider;
-use Orchestra\Testbench\TestCase as BaseTestCase;
+use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
-abstract class TestCase extends BaseTestCase
+abstract class TestCase extends OrchestraTestCase
 {
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->app->register(CustomServiceProvider::class);
-
-        DirectoryEmulator::setup();
-
-        $this->setUpAuthConfig();
-
         $this->useDatabase();
 
         $this->setUpFactories();
 
+        $this->setUpLdapConfig();
+
+        $this->useLdapConnection();
+
+        $this->setUpAuthConfig();
+
         $this->setUpRoutes();
     }
 
-    protected function getPackageProviders($app): array
+    protected function getPackageProviders($app)
     {
         return [
             UserLoginServiceProvider::class,
-            CustomServiceProvider::class,
+            LdapAuthServiceProvider::class,
+            FlashServiceProvider::class,
         ];
     }
 
@@ -47,16 +53,6 @@ abstract class TestCase extends BaseTestCase
 
     protected function setUpAuthConfig(): void
     {
-        config()->set('app.name', 'Test Application');
-        config()->set('app.env', 'testing');
-
-        config()->set('auth.defaults.guard', 'web');
-
-        config()->set('auth.guards.web', [
-            'driver' => 'session',
-            'provider' => 'ldap',
-        ]);
-
         config()->set('auth.providers.users', [
                 'driver' => 'eloquent',
                 'model' => User::class,
@@ -79,26 +75,43 @@ abstract class TestCase extends BaseTestCase
                 ],
             ],
         ]);
+
+        config()->set('auth.defaults.guard', 'ldap');
+
+        config()->set('auth.guards.ldap', [
+            'driver' => 'session',
+            'provider' => 'ldap',
+        ]);
     }
 
-    public function createLdapUser(): void
+    protected function setUpLdapConfig(): void
     {
-       \LdapRecord\Models\ActiveDirectory\User::create([
-            'cn' => 'Gandalf Stormcrow',
-            'givenname' => 'Gandalf',
-            'sn' => 'Stormcrow',
-            'mail' => 'gandalf.stormcrow@example.com',
-            'samaccountname' => 'gandalf',
+        config()->set('ldap.connections', [
+            'default' => [
+                'hosts' => ['127.0.0.1'],
+                'username' => 'cn=user,dc=local,dc=com',
+                'password' => 'secret',
+                'port' => 389,
+                'base_dn' => 'dc=local,dc=com',
+                'timeout' => 5,
+                'use_ssl' => false,
+                'use_tls' => false,
+            ],
         ]);
+    }
+
+    protected function useLdapConnection(): void
+    {
+        $connection = new Connection(config('ldap.connections.default'));
+
+        Container::addConnection($connection);
     }
 
     protected function useDatabase(): void
     {
         config()->set('database.default', 'sqlite');
 
-        $this->app->useDatabasePath(__DIR__ . '/../src/app/Database');
-
-        $this->runLaravelMigrations();
+        $this->loadMigrationsFrom(__DIR__ . '/../src/Database/migrations');
     }
 
     protected function setUpFactories(): void
@@ -107,6 +120,61 @@ abstract class TestCase extends BaseTestCase
             $factoryName = 'NetworkRailBusinessSystems\\UserLogin\\Database\\Factories\\' . class_basename($modelName) . 'Factory';
             return class_exists($factoryName) ? $factoryName : null;
         });
+    }
+
+    public function useLdapEmulator()
+    {
+        DirectoryEmulator::setup(
+            config('ldap.default')
+        );
+
+        $username = 'gandalf';
+        $password =  'secret';
+
+       $ldapUser =  $this->createLdapUser($username);
+
+        $this->createLocalUser($username, $password, $ldapUser);
+
+        $this->setUpEventListner();
+    }
+    protected function createLdapUser(string $username): LdapUser
+    {
+       return LdapUser::create([
+            'cn' => 'Gandalf Stormcrow',
+            'givenname' => 'Gandalf',
+            'sn' => 'Stormcrow',
+            'mail' => 'gandalf.stormcrow@example.com',
+            'samaccountname' => $username,
+        ]);
+    }
+
+    protected function createLocalUser(string $username, string $password, LdapUser $ldapUser): void
+    {
+        $user = new User();
+
+        $user->first_name = 'Gandalf';
+        $user->last_name = 'Stormcrow';
+        $user->email = 'gandalf.stormcrow@example.com';
+        $user->username = $username;
+        $user->password = $password;
+        $user->guid = $ldapUser->fresh()->getObjectGuid();
+        $user->save();
+    }
+
+    protected function setUpEventListner()
+    {
+        Event::listen(
+            function (Attempting $event) {
+                static::setActingUser($event->credentials['samaccountname']);
+            }
+        );
+    }
+
+    protected static function setActingUser(string $username)
+    {
+        Container::getDefaultConnection()->actingAs(
+            LdapUser::findBy('samaccountname', strtolower($username)),
+        );
     }
 
     public function tearDown(): void

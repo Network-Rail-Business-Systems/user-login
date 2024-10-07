@@ -17,35 +17,79 @@ class SignInTest extends TestCase
     {
         parent::setUp();
 
-        $this->createLdapUser();
+        $this->useLdapEmulator();
 
         $this->controller = new LoginController();
     }
-
     public function testSignsIn(): void
     {
-        User::factory()->create([
-            'username' => 'gandalf',
-            'password' => bcrypt('secret'),
-        ]);
-
-        $credentials = [
-            'samaccountname' => 'gandalf',
-            'password' => 'secret',
-        ];
-        
-//  $this->attempt();
+        $this->attempt();
 
         $this->assertTrue(Auth::check());
+    }
+
+    public function testFlashesSuccess(): void
+    {
+        $this->attempt();
+
+        $this->assertEquals('success', flash()->messages->first()->level);
+
+        $this->assertEquals('You have successfully signed in', flash()->messages->first()->message);
+    }
+
+    public function testFlashesFailure(): void
+    {
+        $this->attempt(true);
+
+        $this->assertEquals('danger', flash()->messages->first()->level);
+
+        $this->assertEquals(
+            'Sign in failed; please check your username and password and try again',
+            flash()->messages->first()->message
+        );
     }
 
     protected function attempt($fail = false): RedirectResponse
     {
         return $this->controller->signIn(
             new LoginRequest([
-                'username' => 'gandalf',
-                'password' => 'secret',
+                'username' => $fail === false ? 'gandalf' : 'FakeUsername',
+                'password' => $fail === false ? 'secret' : 'password',
             ]),
         );
+    }
+
+    public function testSyncsExistingWhenUsernameWrong(): void
+    {
+        User::query()
+            ->where('username', '=', 'gandalf')
+            ->update([
+                'username' => 'banralph',
+                'guid' => 'kjsdakjsad',
+            ]);
+
+        $this->attempt();
+
+        $this->assertDatabaseHas('users', [
+            'username' => 'gandalf',
+            'email' => 'gandalf.stormcrow@example.com',
+        ]);
+    }
+
+    public function testSyncsExistingWhenEmailWrong(): void
+    {
+        User::query()
+            ->where('username', '=', 'gandalf')
+            ->update([
+                'email' => 'banralph@example.com',
+                'guid' => 'laskajsd',
+            ]);
+
+        $this->attempt();
+
+        $this->assertDatabaseHas('users', [
+            'username' => 'gandalf',
+            'email' => 'gandalf.stormcrow@example.com',
+        ]);
     }
 }
