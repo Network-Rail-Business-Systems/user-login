@@ -13,9 +13,13 @@ The service provider will be automatically registered.
 
 ## Configuration
 
-1. By default, this package uses the GOV.UK login page. If your system does not use the GOV.UK Design, you can publish the configuration file using Artisan:
+1. By default, this package uses the GOV.UK login page. If your system does not use the GOV.UK Design, you can publish the configuration file and views using Artisan:
    ```
-   php artisan vendor:publish --provider="NetworkRailBusinessSystems\UserLogin\UserLoginServiceProvider"
+   php artisan vendor:publish --provider="NetworkRailBusinessSystems\UserLogin\Providers\UserLoginServiceProvider" --tag=config
+   ```
+
+   ```
+   php artisan vendor:publish --provider="NetworkRailBusinessSystems\UserLogin\Providers\UserLoginServiceProvider" --tag=views
    ```
    After publishing, update the user-login config to point to the custom login view:
    ```php
@@ -25,7 +29,7 @@ The service provider will be automatically registered.
    ```
 2. You can optionally publish the user migration with:
    ```
-   php artisan vendor:publish --provider="NetworkRailBusinessSystems\UserLogin\UserLoginServiceProvider" --tag="uesr-login-migrations"
+   php artisan vendor:publish --provider="NetworkRailBusinessSystems\UserLogin\Providers\UserLoginServiceProvider" --tag=user-login-migrations
    ```
 ## Usage
 This library takes care of the login functionality, so there’s no need to create a controller or handle authentication manually.

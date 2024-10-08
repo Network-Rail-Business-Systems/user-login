@@ -14,7 +14,8 @@
     "require": {
         "php": "^8.3",
         "illuminate/support": "^11",
-        "anthonyedmonds/govuk-laravel": "^4"
+        "anthonyedmonds/govuk-laravel": "^4",
+        "anthonyedmonds/laravel-mysqlite": "^3.0"
     },
     "require-dev": {
         "laravel/pint": "^1",
