@@ -11,7 +11,7 @@ class UserLoginServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/../../config/user-login.php',
+            __DIR__.'/../../config/user-login.php',
             'user-login'
         );
     }
@@ -23,20 +23,20 @@ class UserLoginServiceProvider extends ServiceProvider
         $this->bootViews();
     }
 
-    protected function bootPublishes()
+    protected function bootPublishes(): void
     {
         $currentTimeStamp = date('Y_m_d_His');
 
         $this->publishes([
-            __DIR__ . '/../../config/user-login.php' => config_path('user-login.php'),
+            __DIR__.'/../../config/user-login.php' => config_path('user-login.php'),
         ], 'config');
 
         $this->publishes([
-            __DIR__ . '/../../resources/views' => resource_path('views/vendor/user-login'),
+            __DIR__.'/../../resources/views' => resource_path('views/vendor/user-login'),
         ], 'views');
 
         $this->publishes([
-            __DIR__ . '/../../Database/migrations/0000_00_00_000000_create_users_table.php' => database_path("migrations/{$currentTimeStamp}_create_users_table.php"),
+            __DIR__.'/../../Database/migrations/0000_00_00_000000_create_users_table.php' => database_path("migrations/{$currentTimeStamp}_create_users_table.php"),
         ], 'uesr-login-migrations');
     }
 
@@ -58,8 +58,8 @@ class UserLoginServiceProvider extends ServiceProvider
         });
     }
 
-   protected function bootViews(): void
-   {
-       $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'user-login');
-   }
+    protected function bootViews(): void
+    {
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'user-login');
+    }
 }

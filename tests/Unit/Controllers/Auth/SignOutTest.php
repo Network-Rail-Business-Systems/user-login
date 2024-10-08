@@ -3,8 +3,8 @@
 namespace NetworkRailBusinessSystems\UserLogin\Tests\Unit\Controllers\Auth;
 
 use Illuminate\Http\RedirectResponse;
-use NetworkRailBusinessSystems\UserLogin\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Auth;
+use NetworkRailBusinessSystems\UserLogin\Http\Controllers\Auth\LoginController;
 use NetworkRailBusinessSystems\UserLogin\Models\User;
 use NetworkRailBusinessSystems\UserLogin\Tests\TestCase;
 
@@ -23,7 +23,7 @@ class SignOutTest extends TestCase
         $this->user = User::factory()->create();
         Auth::loginUsingId($this->user);
 
-        $this->controller = new LoginController();
+        $this->controller = new LoginController;
         $this->response = $this->controller->signOut();
     }
 

@@ -2,7 +2,6 @@
 
 namespace NetworkRailBusinessSystems\UserLogin\Http\Controllers\Auth;
 
-
 use AnthonyEdmonds\GovukLaravel\Helpers\GovukPage;
 use AnthonyEdmonds\GovukLaravel\Helpers\GovukQuestion;
 use Illuminate\Contracts\View\View;
@@ -24,16 +23,16 @@ class LoginController extends Controller
         $buttonLabel = 'Sign in';
 
         $questions = [
-           [
-               'name' => 'username',
-               'label' => 'What is your username?',
-               'hint' => "The username you use to access your Windows device, such as jdoe3.",
-           ],
-           [
+            [
+                'name' => 'username',
+                'label' => 'What is your username?',
+                'hint' => 'The username you use to access your Windows device, such as jdoe3.',
+            ],
+            [
                 'name' => 'password',
                 'label' => 'What is your password?',
-                'hint' => "The password you use to access your Windows device.",
-           ],
+                'hint' => 'The password you use to access your Windows device.',
+            ],
         ];
 
         return $view === 'gov-uk-login'

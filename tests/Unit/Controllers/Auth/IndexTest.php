@@ -17,7 +17,7 @@ class IndexTest extends TestCase
     {
         parent::setUp();
 
-        $this->controller = new LoginController();
+        $this->controller = new LoginController;
     }
 
     public function testIndexWithGovUkLoginView()
@@ -58,12 +58,12 @@ class IndexTest extends TestCase
             [
                 'name' => 'username',
                 'label' => 'What is your username?',
-                'hint' => "The username you use to access your Windows device, such as jdoe3.",
+                'hint' => 'The username you use to access your Windows device, such as jdoe3.',
             ],
             [
                 'name' => 'password',
                 'label' => 'What is your password?',
-                'hint' => "The password you use to access your Windows device.",
+                'hint' => 'The password you use to access your Windows device.',
             ]],
             $this->response->getData()['questions']
         );

@@ -3,8 +3,8 @@
 namespace NetworkRailBusinessSystems\UserLogin\Tests\Unit\Controllers\Auth;
 
 use Illuminate\Http\RedirectResponse;
-use NetworkRailBusinessSystems\UserLogin\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Auth;
+use NetworkRailBusinessSystems\UserLogin\Http\Controllers\Auth\LoginController;
 use NetworkRailBusinessSystems\UserLogin\Http\Requests\Auth\LoginRequest;
 use NetworkRailBusinessSystems\UserLogin\Models\User;
 use NetworkRailBusinessSystems\UserLogin\Tests\TestCase;
@@ -19,8 +19,9 @@ class SignInTest extends TestCase
 
         $this->useLdapEmulator();
 
-        $this->controller = new LoginController();
+        $this->controller = new LoginController;
     }
+
     public function testSignsIn(): void
     {
         $this->attempt();
@@ -46,16 +47,6 @@ class SignInTest extends TestCase
         $this->assertEquals(
             'Sign in failed; please check your username and password and try again',
             flash()->messages->first()->message
-        );
-    }
-
-    protected function attempt($fail = false): RedirectResponse
-    {
-        return $this->controller->signIn(
-            new LoginRequest([
-                'username' => $fail === false ? 'gandalf' : 'FakeUsername',
-                'password' => $fail === false ? 'secret' : 'password',
-            ]),
         );
     }
 
@@ -91,5 +82,15 @@ class SignInTest extends TestCase
             'username' => 'gandalf',
             'email' => 'gandalf.stormcrow@example.com',
         ]);
+    }
+
+    protected function attempt($fail = false): RedirectResponse
+    {
+        return $this->controller->signIn(
+            new LoginRequest([
+                'username' => $fail === false ? 'gandalf' : 'FakeUsername',
+                'password' => $fail === false ? 'secret' : 'password',
+            ]),
+        );
     }
 }

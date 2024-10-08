@@ -10,13 +10,13 @@ use Laracasts\Flash\FlashServiceProvider;
 use LdapRecord\Connection;
 use LdapRecord\Container;
 use LdapRecord\Laravel\LdapAuthServiceProvider;
-use LdapRecord\Models\ActiveDirectory\User as LdapUser;
 use LdapRecord\Laravel\Testing\DirectoryEmulator;
+use LdapRecord\Models\ActiveDirectory\User as LdapUser;
 use NetworkRailBusinessSystems\UserLogin\Models\User;
 use NetworkRailBusinessSystems\UserLogin\Providers\UserLoginServiceProvider;
-use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use Orchestra\Testbench\TestCase as BaseTestCase;
 
-abstract class TestCase extends OrchestraTestCase
+abstract class TestCase extends BaseTestCase
 {
     protected function setUp(): void
     {
@@ -35,7 +35,7 @@ abstract class TestCase extends OrchestraTestCase
         $this->setUpRoutes();
     }
 
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
         return [
             UserLoginServiceProvider::class,
@@ -54,8 +54,8 @@ abstract class TestCase extends OrchestraTestCase
     protected function setUpAuthConfig(): void
     {
         config()->set('auth.providers.users', [
-                'driver' => 'eloquent',
-                'model' => User::class,
+            'driver' => 'eloquent',
+            'model' => User::class,
         ]);
 
         config()->set('auth.providers.ldap', [
@@ -111,35 +111,37 @@ abstract class TestCase extends OrchestraTestCase
     {
         config()->set('database.default', 'sqlite');
 
-        $this->loadMigrationsFrom(__DIR__ . '/../src/Database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../src/Database/migrations');
     }
 
     protected function setUpFactories(): void
     {
         Factory::guessFactoryNamesUsing(function (string $modelName) {
-            $factoryName = 'NetworkRailBusinessSystems\\UserLogin\\Database\\Factories\\' . class_basename($modelName) . 'Factory';
+            $factoryName = 'NetworkRailBusinessSystems\\UserLogin\\Database\\Factories\\'.class_basename($modelName).'Factory';
+
             return class_exists($factoryName) ? $factoryName : null;
         });
     }
 
-    public function useLdapEmulator()
+    public function useLdapEmulator(): void
     {
         DirectoryEmulator::setup(
             config('ldap.default')
         );
 
         $username = 'gandalf';
-        $password =  'secret';
+        $password = 'secret';
 
-       $ldapUser =  $this->createLdapUser($username);
+        $ldapUser = $this->createLdapUser($username);
 
         $this->createLocalUser($username, $password, $ldapUser);
 
         $this->setUpEventListner();
     }
+
     protected function createLdapUser(string $username): LdapUser
     {
-       return LdapUser::create([
+        return LdapUser::create([
             'cn' => 'Gandalf Stormcrow',
             'givenname' => 'Gandalf',
             'sn' => 'Stormcrow',
@@ -150,7 +152,7 @@ abstract class TestCase extends OrchestraTestCase
 
     protected function createLocalUser(string $username, string $password, LdapUser $ldapUser): void
     {
-        $user = new User();
+        $user = new User;
 
         $user->first_name = 'Gandalf';
         $user->last_name = 'Stormcrow';
@@ -170,7 +172,7 @@ abstract class TestCase extends OrchestraTestCase
         );
     }
 
-    protected static function setActingUser(string $username)
+    protected static function setActingUser(string $username): void
     {
         Container::getDefaultConnection()->actingAs(
             LdapUser::findBy('samaccountname', strtolower($username)),
@@ -183,4 +185,3 @@ abstract class TestCase extends OrchestraTestCase
         parent::tearDown();
     }
 }
-
