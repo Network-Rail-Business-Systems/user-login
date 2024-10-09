@@ -56,7 +56,7 @@ class LoginController extends Controller
             : view("user-login::$view", [
                 'questions' => $questions,
                 'action' => $action,
-                'buttonLabel' => $action,
+                'buttonLabel' => $buttonLabel,
             ]);
     }
 
