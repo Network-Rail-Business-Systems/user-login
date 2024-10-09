@@ -5,12 +5,12 @@ namespace NetworkRailBusinessSystems\UserLogin\Http\Controllers\Auth;
 use AnthonyEdmonds\GovukLaravel\Helpers\GovukPage;
 use AnthonyEdmonds\GovukLaravel\Helpers\GovukQuestion;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use LdapRecord\Models\ActiveDirectory\User as LdapUser;
 use NetworkRailBusinessSystems\UserLogin\Http\Requests\Auth\LoginRequest;
-use NetworkRailBusinessSystems\UserLogin\Models\User;
 
 class LoginController extends Controller
 {
@@ -53,7 +53,11 @@ class LoginController extends Controller
                 'post',
                 "user-login::$view"
             )
-            : view("user-login::$view", compact('questions', 'action', 'buttonLabel'));
+            : view("user-login::$view", [
+                'questions' => $questions,
+                'action' => $action,
+                'buttonLabel' => $action,
+            ]);
     }
 
     public function signIn(LoginRequest $request): RedirectResponse
@@ -81,6 +85,8 @@ class LoginController extends Controller
 
     protected function syncExistingUser(string $username): bool
     {
+        $model = config('user-login.model');
+
         $ldapUser = LdapUser::query()
             ->where('samaccountname', '=', $username)
             ->first();
@@ -89,7 +95,7 @@ class LoginController extends Controller
             return false;
         }
 
-        User::query()
+        $model::query()
             ->where('username', '=', $username)
             ->orWhere('email', '=', $ldapUser->getAttributeValue('mail'))
             ->limit(1)
@@ -114,7 +120,7 @@ class LoginController extends Controller
 
     protected function loginSucceeded(): RedirectResponse
     {
-        /** @var User $user */
+        /** @var Model $user */
         $user = Auth::user();
         $user->touch();
 

@@ -34,10 +34,6 @@ class UserLoginServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../../resources/views' => resource_path('views/vendor/user-login'),
         ], 'views');
-
-        $this->publishes([
-            __DIR__.'/../../Database/migrations/0000_00_00_000000_create_users_table.php' => database_path("migrations/{$currentTimeStamp}_create_users_table.php"),
-        ], 'uesr-login-migrations');
     }
 
     protected function bootRoutes(): void

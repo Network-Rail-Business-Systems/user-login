@@ -4,4 +4,5 @@
 // Other UIs can modify the login blade as needed
 return [
     'view' => 'gov-uk-login',
+    'model' => '\App\Models\User',
 ];

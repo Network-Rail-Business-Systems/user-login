@@ -20,13 +20,13 @@
 
                 <div class="control">
                     <input
-                            class="input"
-                            style="max-width: 15rem;"
-                            id="{{ $questions[0]['name'] }}"
-                            type="text"
-                            name="{{ $questions[0]['name'] }}"
-                            value="{{ old('username') }}"
-                            required
+                        class="input"
+                        style="max-width: 15rem;"
+                        id="{{ $questions[0]['name'] }}"
+                        type="text"
+                        name="{{ $questions[0]['name'] }}"
+                        value="{{ old('username') }}"
+                        required
                     />
 
                     @error($questions[0]['name'])

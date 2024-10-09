@@ -12,8 +12,8 @@ use LdapRecord\Container;
 use LdapRecord\Laravel\LdapAuthServiceProvider;
 use LdapRecord\Laravel\Testing\DirectoryEmulator;
 use LdapRecord\Models\ActiveDirectory\User as LdapUser;
-use NetworkRailBusinessSystems\UserLogin\Models\User;
 use NetworkRailBusinessSystems\UserLogin\Providers\UserLoginServiceProvider;
+use NetworkRailBusinessSystems\UserLogin\Tests\Models\User;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -21,6 +21,8 @@ abstract class TestCase extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        config()->set('user-login.model', User::class);
 
         $this->useDatabase();
 
@@ -111,13 +113,13 @@ abstract class TestCase extends BaseTestCase
     {
         config()->set('database.default', 'sqlite');
 
-        $this->loadMigrationsFrom(__DIR__.'/../src/Database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../tests/Migrations');
     }
 
     protected function setUpFactories(): void
     {
         Factory::guessFactoryNamesUsing(function (string $modelName) {
-            $factoryName = 'NetworkRailBusinessSystems\\UserLogin\\Database\\Factories\\'.class_basename($modelName).'Factory';
+            $factoryName = 'NetworkRailBusinessSystems\\UserLogin\\Tests\\Factories\\'.class_basename($modelName).'Factory';
 
             return class_exists($factoryName) ? $factoryName : null;
         });

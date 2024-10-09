@@ -6,7 +6,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use NetworkRailBusinessSystems\UserLogin\Http\Controllers\Auth\LoginController;
 use NetworkRailBusinessSystems\UserLogin\Http\Requests\Auth\LoginRequest;
-use NetworkRailBusinessSystems\UserLogin\Models\User;
+use NetworkRailBusinessSystems\UserLogin\Tests\Models\User;
 use NetworkRailBusinessSystems\UserLogin\Tests\TestCase;
 
 class SignInTest extends TestCase

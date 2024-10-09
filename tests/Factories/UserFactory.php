@@ -1,10 +1,10 @@
 <?php
 
-namespace NetworkRailBusinessSystems\UserLogin\Database\Factories;
+namespace NetworkRailBusinessSystems\UserLogin\Tests\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use NetworkRailBusinessSystems\UserLogin\Models\User;
+use NetworkRailBusinessSystems\UserLogin\Tests\Models\User;
 
 /**
  * @extends Factory<User>

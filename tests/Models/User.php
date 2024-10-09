@@ -1,6 +1,6 @@
 <?php
 
-namespace NetworkRailBusinessSystems\UserLogin\Models;
+namespace NetworkRailBusinessSystems\UserLogin\Tests\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
