@@ -5,14 +5,13 @@ namespace NetworkRailBusinessSystems\UserLogin\Tests\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use LdapRecord\Laravel\Auth\AuthenticatesWithLdap;
-use LdapRecord\Laravel\Auth\LdapAuthenticatable;
+use NetworkRailBusinessSystems\UserLogin\Traits\SyncWithLdap;
 
-class User extends Authenticatable implements LdapAuthenticatable
+class User extends Authenticatable
 {
-    use AuthenticatesWithLdap;
     use HasFactory;
     use SoftDeletes;
+    use SyncWithLdap;
 
     protected $fillable = ['first_name', 'last_name', 'email', 'username'];
 
@@ -20,7 +19,6 @@ class User extends Authenticatable implements LdapAuthenticatable
         'created_at',
         'deleted_at',
         'id',
-        'name',
         'password',
         'remember_token',
         'updated_at',
@@ -36,4 +34,13 @@ class User extends Authenticatable implements LdapAuthenticatable
     ];
 
     protected string $guard_name = 'web';
+
+    public static function syncUser(string $username): bool
+    {
+        if (config('userlogin.ldap-sync') === true) {
+            return false;
+        }
+
+        return true;
+    }
 }

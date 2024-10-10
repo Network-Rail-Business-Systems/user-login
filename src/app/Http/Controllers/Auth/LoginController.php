@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
-use LdapRecord\Models\ActiveDirectory\User as LdapUser;
 use NetworkRailBusinessSystems\UserLogin\Http\Requests\Auth\LoginRequest;
 
 class LoginController extends Controller
@@ -62,18 +61,22 @@ class LoginController extends Controller
 
     public function signIn(LoginRequest $request): RedirectResponse
     {
+        $usernameKey = config('user-login.ldap-sync') === true ? 'samaccountname' : 'username';
+
         $details = [
-            'samaccountname' => strtolower($request->username),
+            $usernameKey => strtolower($request->username),
             'password' => $request->password,
         ];
 
-        if ($this->syncExistingUser($details['samaccountname']) === false) {
-            return $this->loginFailed($details['samaccountname']);
+        $model = config('user-login.model');
+
+        if ($model::syncUser($details[$usernameKey]) === false) {
+            return $this->loginFailed($details[$usernameKey]);
         }
 
         return Auth::attempt($details, true) === true
             ? $this->loginSucceeded()
-            : $this->loginFailed($details['samaccountname']);
+            : $this->loginFailed($details[$usernameKey]);
     }
 
     public function signOut(): RedirectResponse
@@ -81,30 +84,6 @@ class LoginController extends Controller
         Auth::logout();
 
         return redirect()->route('login');
-    }
-
-    protected function syncExistingUser(string $username): bool
-    {
-        $model = config('user-login.model');
-
-        $ldapUser = LdapUser::query()
-            ->where('samaccountname', '=', $username)
-            ->first();
-
-        if ($ldapUser === null) {
-            return false;
-        }
-
-        $model::query()
-            ->where('username', '=', $username)
-            ->orWhere('email', '=', $ldapUser->getAttributeValue('mail'))
-            ->limit(1)
-            ->update([
-                'username' => $username,
-                'email' => $ldapUser->getAttributeValue('mail'),
-            ]);
-
-        return true;
     }
 
     protected function loginFailed(string $username): RedirectResponse

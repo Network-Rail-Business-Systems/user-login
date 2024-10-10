@@ -6,7 +6,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use NetworkRailBusinessSystems\UserLogin\Http\Controllers\Auth\LoginController;
 use NetworkRailBusinessSystems\UserLogin\Http\Requests\Auth\LoginRequest;
-use NetworkRailBusinessSystems\UserLogin\Tests\Models\User;
 use NetworkRailBusinessSystems\UserLogin\Tests\TestCase;
 
 class SignInTest extends TestCase
@@ -17,7 +16,7 @@ class SignInTest extends TestCase
     {
         parent::setUp();
 
-        $this->useLdapEmulator();
+        $this->createLocalUser();
 
         $this->controller = new LoginController;
     }
@@ -50,38 +49,18 @@ class SignInTest extends TestCase
         );
     }
 
-    public function testSyncsExistingWhenUsernameWrong(): void
+    public function testFlashesFailureWhenSyncFalse(): void
     {
-        User::query()
-            ->where('username', '=', 'gandalf')
-            ->update([
-                'username' => 'banralph',
-                'guid' => 'kjsdakjsad',
-            ]);
+        config()->set('userlogin.ldap-sync', true);
 
         $this->attempt();
 
-        $this->assertDatabaseHas('users', [
-            'username' => 'gandalf',
-            'email' => 'gandalf.stormcrow@example.com',
-        ]);
-    }
+        $this->assertEquals('danger', flash()->messages->first()->level);
 
-    public function testSyncsExistingWhenEmailWrong(): void
-    {
-        User::query()
-            ->where('username', '=', 'gandalf')
-            ->update([
-                'email' => 'banralph@example.com',
-                'guid' => 'laskajsd',
-            ]);
-
-        $this->attempt();
-
-        $this->assertDatabaseHas('users', [
-            'username' => 'gandalf',
-            'email' => 'gandalf.stormcrow@example.com',
-        ]);
+        $this->assertEquals(
+            'Sign in failed; please check your username and password and try again',
+            flash()->messages->first()->message
+        );
     }
 
     protected function attempt($fail = false): RedirectResponse

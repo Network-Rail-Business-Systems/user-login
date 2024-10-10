@@ -14,22 +14,20 @@
     "require": {
         "php": "^8.3",
         "illuminate/support": "^11",
-        "anthonyedmonds/govuk-laravel": "^4",
-        "anthonyedmonds/laravel-mysqlite": "^3.0"
+        "anthonyedmonds/govuk-laravel": "^4"
     },
     "require-dev": {
         "laravel/pint": "^1",
         "orchestra/testbench": "^9",
         "phpunit/phpunit": "^11",
         "brianium/paratest": "^7",
-        "directorytree/ldaprecord-laravel": "^3",
         "larastan/larastan": "^2",
         "laracasts/flash": "^3",
         "networkrailbusinesssystems/badges": "^1"
     },
     "autoload": {
         "psr-4": {
-            "NetworkRailBusinessSystems\\UserLogin\\": "src/app"
+            "NetworkRailBusinessSystems\\UserLogin\\": "src/app/"
         }
     },
     "autoload-dev": {
@@ -40,7 +38,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "NetworkRailBusinessSystems\\UserLogin\\Providers\\UserLoginServiceProvider"
+                "NetworkRailBusinessSystems\\UserLogin\\UserLoginServiceProvider"
             ]
         }
     },

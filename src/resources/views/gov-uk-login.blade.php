@@ -7,13 +7,13 @@
 
 @section('after-main')
     <x-govuk::details label="Forgotten your password?">
-        <p class="govuk-body">Windows device passwords are controlled by Network Rail IT. You may either:</p>
+        <p class="govuk-body">{{ config('user-login.forgot_password_details.body-text') }}</p>
         <x-govuk::ul bulleted>
             <li>
-                <a class="govuk-link" href="{{ route('password-reset') }}" target="_blank">Reset your password online (opens in a new tab)</a>
+                <a class="govuk-link" href="{{ route(config('user-login.forgot_password.password-reset-route'))}}" target="_blank">Reset your password online (opens in a new tab)</a>
             </li>
             <li>
-                <a class="govuk-link" href="{{ route('it-helpdesk') }}" target="_blank">Contact the IT helpdesk (opens in a new tab)</a>
+                <a class="govuk-link" href="{{ route(config('user-login.forgot_password.it-helpdesk-route')) }}" target="_blank">Contact the IT helpdesk (opens in a new tab)</a>
             </li>
         </x-govuk::ul>
     </x-govuk::details>
