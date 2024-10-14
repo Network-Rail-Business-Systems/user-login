@@ -22,6 +22,8 @@ abstract class TestCase extends BaseTestCase
         $this->setUpFactories();
 
         $this->setUpRoutes();
+
+        $this->createLocalUser();
     }
 
     protected function getPackageProviders($app): array
@@ -59,6 +61,7 @@ abstract class TestCase extends BaseTestCase
     {
         User::factory()->create([
             'username' => 'gandalf',
+            'email' => 'gandalf.stormcrow@example.com',
             'password' => Bcrypt('secret'),
         ]);
     }

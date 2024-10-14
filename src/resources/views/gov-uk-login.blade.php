@@ -7,14 +7,13 @@
 
 @section('after-main')
     <x-govuk::details label="Forgotten your password?">
-        <p class="govuk-body">{{ config('user-login.forgot_password_details.body-text') }}</p>
+        <p class="govuk-body">{{ config('user-login.forgot_password.description') }}</p>
         <x-govuk::ul bulleted>
-            <li>
-                <a class="govuk-link" href="{{ route(config('user-login.forgot_password.password-reset-route'))}}" target="_blank">Reset your password online (opens in a new tab)</a>
-            </li>
-            <li>
-                <a class="govuk-link" href="{{ route(config('user-login.forgot_password.it-helpdesk-route')) }}" target="_blank">Contact the IT helpdesk (opens in a new tab)</a>
-            </li>
+            @foreach(config('user-login.forgot_password.routes') as $lable => $name)
+                <li>
+                    <a class="govuk-link" href="{{ route($name) }}" target="_blank">{{ $lable }}</a>
+                </li>
+            @endforeach
         </x-govuk::ul>
     </x-govuk::details>
 @endsection

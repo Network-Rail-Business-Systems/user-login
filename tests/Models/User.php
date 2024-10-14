@@ -5,13 +5,14 @@ namespace NetworkRailBusinessSystems\UserLogin\Tests\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use NetworkRailBusinessSystems\UserLogin\Traits\SyncWithLdap;
+use NetworkRailBusinessSystems\UserLogin\Traits\ExistingUser;
+use NetworkRailBusinessSystems\UserLogin\Traits\GetExistingUser;
 
-class User extends Authenticatable
+class User extends Authenticatable implements ExistingUser
 {
+    use GetExistingUser;
     use HasFactory;
     use SoftDeletes;
-    use SyncWithLdap;
 
     protected $fillable = ['first_name', 'last_name', 'email', 'username'];
 
@@ -35,12 +36,10 @@ class User extends Authenticatable
 
     protected string $guard_name = 'web';
 
-    public static function syncUser(string $username): bool
+    public static function mail($username): ?string
     {
-        if (config('userlogin.ldap-sync') === true) {
-            return false;
-        }
-
-        return true;
+        return static::query()
+            ->where('username', '=', $username)
+            ->first()?->email;
     }
 }

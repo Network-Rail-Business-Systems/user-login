@@ -68,15 +68,35 @@ class LoginController extends Controller
             'password' => $request->password,
         ];
 
-        $model = config('user-login.model');
-
-        if ($model::syncUser($details[$usernameKey]) === false) {
+        if ($this->syncExistingUser($details[$usernameKey]) === false) {
             return $this->loginFailed($details[$usernameKey]);
         }
 
         return Auth::attempt($details, true) === true
             ? $this->loginSucceeded()
             : $this->loginFailed($details[$usernameKey]);
+    }
+
+    protected function syncExistingUser(string $username): bool
+    {
+        $model = config('user-login.model');
+
+        $mail = $model::mail($username);
+
+        if ($mail === null) {
+            return false;
+        }
+
+        $model::query()
+            ->where('username', '=', $username)
+            ->orWhere('email', '=', $mail)
+            ->limit(1)
+            ->update([
+                'username' => $username,
+                'email' => $mail,
+            ]);
+
+        return true;
     }
 
     public function signOut(): RedirectResponse

@@ -16,8 +16,6 @@ class SignInTest extends TestCase
     {
         parent::setUp();
 
-        $this->createLocalUser();
-
         $this->controller = new LoginController;
     }
 
@@ -40,20 +38,6 @@ class SignInTest extends TestCase
     public function testFlashesFailure(): void
     {
         $this->attempt(true);
-
-        $this->assertEquals('danger', flash()->messages->first()->level);
-
-        $this->assertEquals(
-            'Sign in failed; please check your username and password and try again',
-            flash()->messages->first()->message
-        );
-    }
-
-    public function testFlashesFailureWhenSyncFalse(): void
-    {
-        config()->set('userlogin.ldap-sync', true);
-
-        $this->attempt();
 
         $this->assertEquals('danger', flash()->messages->first()->level);
 
