@@ -61,6 +61,25 @@
                     </div>
                 </div>
             </div>
+
+            <div class="content">
+                <details class="details">
+                    <summary class="summary">
+                    <span class="summary-text">
+                      Forgotten your password?
+                    </span>
+                    </summary>
+                    <div class="message-body">{{ $forgotPasswordDetails['description'] }}
+                        <ul>
+                            @foreach($forgotPasswordDetails['routes'] as $lable => $name)
+                                <li>
+                                    <a href="{{ route($name) }}" target="_blank">{{ $lable }}</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </details>
+            </div>
         </form>
     </div>
 </div>

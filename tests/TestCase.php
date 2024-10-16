@@ -2,7 +2,6 @@
 
 namespace NetworkRailBusinessSystems\UserLogin\Tests;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Config;
 use Laracasts\Flash\FlashServiceProvider;
 use NetworkRailBusinessSystems\UserLogin\Providers\UserLoginServiceProvider;
@@ -15,11 +14,14 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        config()->set('user-login.model', User::class);
+        $model = \NetworkRailBusinessSystems\UserLogin\Tests\Models\User::class;
+
+        config()->set('user-login.model', $model);
+        config()->set('user-login.sync-user.model', $model);
+        config()->set('user-login.auth-identifier', 'username');
+        config()->set('user-login.sync-user.unique-identifier', 'guid');
 
         $this->useDatabase();
-
-        $this->setUpFactories();
 
         $this->setUpRoutes();
 
@@ -48,21 +50,13 @@ abstract class TestCase extends BaseTestCase
         $this->loadMigrationsFrom(__DIR__.'/../tests/Migrations');
     }
 
-    protected function setUpFactories(): void
-    {
-        Factory::guessFactoryNamesUsing(function (string $modelName) {
-            $factoryName = 'NetworkRailBusinessSystems\\UserLogin\\Tests\\Factories\\'.class_basename($modelName).'Factory';
-
-            return class_exists($factoryName) ? $factoryName : null;
-        });
-    }
-
     public function createLocalUser(): void
     {
         User::factory()->create([
             'username' => 'gandalf',
             'email' => 'gandalf.stormcrow@example.com',
             'password' => Bcrypt('secret'),
+            'guid' => 'testguid',
         ]);
     }
 

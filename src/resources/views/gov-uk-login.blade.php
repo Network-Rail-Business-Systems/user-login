@@ -7,9 +7,9 @@
 
 @section('after-main')
     <x-govuk::details label="Forgotten your password?">
-        <p class="govuk-body">{{ config('user-login.forgot_password.description') }}</p>
+        <p class="govuk-body">{{ $forgotPasswordDetails['description'] }}</p>
         <x-govuk::ul bulleted>
-            @foreach(config('user-login.forgot_password.routes') as $lable => $name)
+            @foreach($forgotPasswordDetails['routes'] as $lable => $name)
                 <li>
                     <a class="govuk-link" href="{{ route($name) }}" target="_blank">{{ $lable }}</a>
                 </li>

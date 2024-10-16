@@ -42,7 +42,7 @@ class SignInTest extends TestCase
         $this->assertEquals('danger', flash()->messages->first()->level);
 
         $this->assertEquals(
-            'Sign in failed; please check your username and password and try again',
+            'Sign-in failed; check your details and try again',
             flash()->messages->first()->message
         );
     }

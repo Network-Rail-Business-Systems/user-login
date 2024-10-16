@@ -21,6 +21,8 @@ class LoginController extends Controller
 
         $buttonLabel = 'Sign in';
 
+        $forgotPasswordDetails = config('user-login.forgot-password');
+
         $questions = [
             [
                 'name' => 'username',
@@ -50,23 +52,26 @@ class LoginController extends Controller
                 $action,
                 null,
                 'post',
-                "user-login::$view"
-            )
+                "user-login::$view",
+            )->with('forgotPasswordDetails', $forgotPasswordDetails)
             : view("user-login::$view", [
                 'questions' => $questions,
                 'action' => $action,
                 'buttonLabel' => $buttonLabel,
+                'forgotPasswordDetails' => $forgotPasswordDetails,
             ]);
     }
 
     public function signIn(LoginRequest $request): RedirectResponse
     {
-        $usernameKey = config('user-login.ldap-sync') === true ? 'samaccountname' : 'username';
+        $usernameKey = config('user-login.auth-identifier');
 
         $details = [
             $usernameKey => strtolower($request->username),
             'password' => $request->password,
         ];
+
+        $model = config('user-login.model');
 
         if ($this->syncExistingUser($details[$usernameKey]) === false) {
             return $this->loginFailed($details[$usernameKey]);
@@ -81,19 +86,19 @@ class LoginController extends Controller
     {
         $model = config('user-login.model');
 
-        $mail = $model::mail($username);
+        $modelIdentifier = config('user-login.model-identifier');
 
-        if ($mail === null) {
+        $guid = $model::uniqueIdentifier($username);
+
+        if ($guid === null) {
             return false;
         }
 
         $model::query()
-            ->where('username', '=', $username)
-            ->orWhere('email', '=', $mail)
+            ->where('guid', '=', $guid)
             ->limit(1)
             ->update([
-                'username' => $username,
-                'email' => $mail,
+                $modelIdentifier => $username,
             ]);
 
         return true;
@@ -108,7 +113,9 @@ class LoginController extends Controller
 
     protected function loginFailed(string $username): RedirectResponse
     {
-        flash('Sign in failed; please check your username and password and try again')->error();
+        $message = config('user-login.login-failed-message');
+
+        flash()->error($message);
 
         return redirect()
             ->route('login')
@@ -123,7 +130,9 @@ class LoginController extends Controller
         $user = Auth::user();
         $user->touch();
 
-        flash('You have successfully signed in')->success();
+        $message = config('user-login.login-success-message');
+
+        flash()->success($message);
 
         return redirect()->intended();
     }

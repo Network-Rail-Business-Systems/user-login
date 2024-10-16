@@ -5,12 +5,13 @@ namespace NetworkRailBusinessSystems\UserLogin\Tests\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use NetworkRailBusinessSystems\UserLogin\Tests\Factories\UserFactory;
 use NetworkRailBusinessSystems\UserLogin\Traits\ExistingUser;
-use NetworkRailBusinessSystems\UserLogin\Traits\GetExistingUser;
+use NetworkRailBusinessSystems\UserLogin\Traits\ExistingUserUniqueIdentifier;
 
 class User extends Authenticatable implements ExistingUser
 {
-    use GetExistingUser;
+    use ExistingUserUniqueIdentifier;
     use HasFactory;
     use SoftDeletes;
 
@@ -36,10 +37,9 @@ class User extends Authenticatable implements ExistingUser
 
     protected string $guard_name = 'web';
 
-    public static function mail($username): ?string
+    // Factory
+    protected static function newFactory(): UserFactory
     {
-        return static::query()
-            ->where('username', '=', $username)
-            ->first()?->email;
+        return new UserFactory;
     }
 }
