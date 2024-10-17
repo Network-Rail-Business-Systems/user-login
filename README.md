@@ -89,15 +89,29 @@ A route macro is provided to handle the login.
 Route::userLogin();
 ```
 
-## ExistingUser interface
+## interface: ExistingUser
+In your User model or any other model you want to use for authentication, must implement the ```ExistingUser``` interface and use the ```ExistingUserUniqueIdentifier``` trait.
 
-This package provide the ```ExistingUser``` interface and ```the ExistingUserUniqueIdentifier``` trait, which allow to retrieve an existing user's unique identifier (such as a GUID) from either your local database or LDAP.
+The `ExistingUser` interface defines an abstract function for retrieving the unique identifier:
 
-In your User model or any other model you want to use for authentication, implement the ```ExistingUser``` interface and use the ```ExistingUserUniqueIdentifier``` trait.
+```
+<?php
+
+namespace NetworkRailBusinessSystems\UserLogin\Interfaces;
+
+interface ExistingUser
+{
+    /*
+     * Retrieve the unique identifier for a user by their auth identifier (e.g., username or samaccountname).
+     * This method should return a unique identifier associated with the user, or null if the user does not exist.
+     */
+    public static function uniqueIdentifier(string $username): ?string;
+}
+```
 
 ### Trait: ExistingUserUniqueIdentifier
 
-The ExistingUserUniqueIdentifier trait provides a method to fetch a user's unique identifier (like a GUID) from either LDAP or your local database.
+The ```ExistingUserUniqueIdentifier``` trait provides a method ```uniqueIdentifier``` to fetch a user unique identifier (like a GUID) from either LDAP or your local database.
 
 ```
 <?php
@@ -149,7 +163,7 @@ To get the user login functionality up and running, follow these steps:
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use NetworkRailBusinessSystems\UserLogin\Traits\ExistingUser;
+use NetworkRailBusinessSystems\UserLogin\Interfaces\ExistingUser;
 use NetworkRailBusinessSystems\UserLogin\Traits\ExistingUserUniqueIdentifier;
 
 class User extends Model implements ExistingUser
