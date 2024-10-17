@@ -117,7 +117,7 @@ The ```DbUniqueIdentifier``` trait provides a method ```uniqueIdentifier``` to f
 
 namespace NetworkRailBusinessSystems\UserLogin\Traits;
 
-trait LdapUniqueIdentifier
+trait DbUniqueIdentifier
 {
     // return The unique identifier for the user, or null if not found.
     public static function uniqueIdentifier(string $username): ?string
