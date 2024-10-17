@@ -141,7 +141,7 @@ The package handles user routing and validation without requiring a custom Login
 
 To get the user login functionality up and running, follow these steps:
 
-1. Implement the ```ExistingUser``` Interface and Use the Trait ```ExistingUserUniqueIdentifier```: In your User model (or any model you're using for authentication).
+1. Implement the ```ExistingUser``` Interface and Use the Trait ```ExistingUserUniqueIdentifier``` In your User model or any model you're using for authentication.
 
 ```
 <?php
@@ -149,7 +149,7 @@ To get the user login functionality up and running, follow these steps:
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use NetworkRailBusinessSystems\UserLogin\Contracts\ExistingUser;
+use NetworkRailBusinessSystems\UserLogin\Traits\ExistingUser;
 use NetworkRailBusinessSystems\UserLogin\Traits\ExistingUserUniqueIdentifier;
 
 class User extends Model implements ExistingUser
