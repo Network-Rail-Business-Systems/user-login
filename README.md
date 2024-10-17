@@ -90,7 +90,6 @@ Route::userLogin();
 ```
 
 ## interface: ExistingUser
-In your User model or any other model you want to use for authentication, must implement the ```ExistingUser``` interface and use the ```ExistingUserUniqueIdentifier``` trait.
 
 The `ExistingUser` interface defines an abstract function for retrieving the unique identifier:
 
@@ -155,7 +154,7 @@ The package handles user routing and validation without requiring a custom Login
 
 To get the user login functionality up and running, follow these steps:
 
-1. Implement the ```ExistingUser``` Interface and Use the Trait ```ExistingUserUniqueIdentifier``` In your User model or any model you're using for authentication.
+1.In your User model or any other model you want to use for authentication, must implement the ```ExistingUser``` interface and use the ```ExistingUserUniqueIdentifier``` trait.
 
 ```
 <?php
