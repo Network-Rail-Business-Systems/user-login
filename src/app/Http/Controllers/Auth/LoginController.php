@@ -84,9 +84,10 @@ class LoginController extends Controller
 
     protected function syncExistingUser(string $username): bool
     {
-        $model = config('user-login.model');
+        $model = config('user-login.local-model');
 
-        $modelIdentifier = config('user-login.model-identifier');
+        $modelIdentifier = config('user-login.local-model-identifier');
+        $modelUniqueIdentifier = config('user-login.local-unique-identifier');
 
         $guid = $model::uniqueIdentifier($username);
 
@@ -95,7 +96,7 @@ class LoginController extends Controller
         }
 
         $model::query()
-            ->where('guid', '=', $guid)
+            ->where($modelUniqueIdentifier, '=', $guid)
             ->limit(1)
             ->update([
                 $modelIdentifier => $username,

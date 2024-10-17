@@ -16,7 +16,7 @@ abstract class TestCase extends BaseTestCase
 
         $model = \NetworkRailBusinessSystems\UserLogin\Tests\Models\User::class;
 
-        config()->set('user-login.model', $model);
+        config()->set('user-login.local-model', $model);
         config()->set('user-login.sync-user.model', $model);
         config()->set('user-login.auth-identifier', 'username');
         config()->set('user-login.sync-user.unique-identifier', 'guid');
