@@ -1,5 +1,5 @@
 # User Login.
-This package provide user logging in functionality.
+This package provides user login functionality.
 
 Built for [Laravel 11](https://laravel.com/).
 
