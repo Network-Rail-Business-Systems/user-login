@@ -186,7 +186,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use NetworkRailBusinessSystems\UserLogin\Interfaces\ExistingUser;
-use NetworkRailBusinessSystems\UserLogin\Traits\ExistingUserUniqueIdentifier;
+use NetworkRailBusinessSystems\UserLogin\Traits\LdapUniqueIdentifier;
 
 class User extends Model implements ExistingUser
 {
