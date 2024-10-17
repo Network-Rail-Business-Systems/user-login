@@ -8,6 +8,12 @@ return [
     'view' => 'gov-uk-login',
 
     /*
+    * Which attribute authenticate the user
+    * In the case of LDAP, this could be 'samaccountname'.
+    */
+    'auth-identifier' => 'samaccountname',
+
+    /*
     * Which User model to use locally for login
     * Which attribute identifies the user in model
     * Which attribute uniquely identifies the user in model
@@ -17,19 +23,13 @@ return [
     'local-unique-identifier' => 'guid',
 
     /*
-    * Which attribute authenticate the user
-    * In the case of LDAP, this could be 'samaccountname'.
+    * Which LdapRecord User model to use to get the unique identifier
+    * Which attribute identifies the user in LDAP
+    * Which unique attribute identifies the user in LDAP
     */
-    'auth-identifier' => 'samaccountname',
-
-    /*
-    * Which User model to use to get the unique identifier
-    * Which unique attribute identifies the user in model
-    */
-    'sync-user' => [
-        'model' => \LdapRecord\Models\ActiveDirectory\User::class,
-        'unique-identifier' => 'objectguid',
-    ],
+    'ldap-user-model' => \LdapRecord\Models\ActiveDirectory\User::class,
+    'ldap-model-identifier' => 'samaccountname',
+    'ldap-unique-identifier' => 'objectguid',
 
     /*
     * Custom messages for login success or failure.

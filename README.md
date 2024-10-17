@@ -39,6 +39,12 @@ return [
     'view' => 'gov-uk-login',
 
     /*
+     * The attribute used for authentication.
+     * In the case of LDAP, this could be 'samaccountname'.
+     */
+    'auth-identifier' => 'samaccountname',
+    
+    /*
     * Which User model to use locally for login
     * Which attribute identifies the user in model
     * Which attribute uniquely identifies the user in model
@@ -48,19 +54,13 @@ return [
     'local-unique-identifier' => 'guid',
 
     /*
-     * The attribute used for authentication.
-     * In the case of LDAP, this could be 'samaccountname'.
-     */
-    'auth-identifier' => 'samaccountname',
-
-    /*
-    * Which User model to use to get the unique identifier
-    * Which unique attribute identifies the user in model
+    * Which LdapRecord User model to use to get the unique identifier
+    * Which attribute identifies the user in LDAP
+    * Which unique attribute identifies the user in LDAP
     */
-    'sync-user' => [
-        'model' => \LdapRecord\Models\ActiveDirectory\User::class,
-        'unique-identifier' => 'objectguid',
-    ],
+    'ldap-user-model' => \LdapRecord\Models\ActiveDirectory\User::class,
+    'ldap-model-identifier' => 'samaccountname',
+    'ldap-unique-identifier' => 'objectguid',
     
     /*
      * Custom messages for login success or failure.
@@ -108,9 +108,9 @@ interface ExistingUser
 }
 ```
 
-### Trait: ExistingUserUniqueIdentifier
+### Trait: DbUniqueIdentifier
 
-The ```ExistingUserUniqueIdentifier``` trait provides a method ```uniqueIdentifier``` to fetch a user unique identifier (like a GUID) from either LDAP or your local database.
+The ```DbUniqueIdentifier``` trait provides a method ```uniqueIdentifier``` to fetch a user unique identifier (like a GUID) from your local database.
 
 ```
 <?php
@@ -122,26 +122,49 @@ trait ExistingUserUniqueIdentifier
     // return The unique identifier for the user, or null if not found.
     public static function uniqueIdentifier(string $username): ?string
     {
-        // Model for the LDAP or local database source (configurable)
-        $ldapModel = config('user-login.sync-user.model');
-
-        // Model for the local database (configurable)
+        // Model for the local database
         $eloquentModel = config('user-login.local-model');
 
-        // Attribute that holds the unique identifier (e.g., GUID or objectguid, configurable)
-        $guidAttribute = config('user-login.sync-user.unique-identifier');
+        // Attribute that holds the unique identifier (e.g., GUID)
+        $guidAttribute = config('user-login.local-unique-identifier');
 
-        // Attribute used to authenticate the user (e.g., username or samaccountname, configurable)
-        $authAttribute = config('user-login.auth-identifier');
+        // Attribute used to authenticate the user (e.g., username or samaccountname)
+        $authAttribute = config('user-login.local-model-identifier');
 
-        // Query the LDAP model (or local source) using the auth attribute
-        $existingUser = $ldapModel::query()
-            ->where($authAttribute, '=', $username)
-            ->first();
+        // Query the local model and return unique identifier or null
+        return $eloquentModel::query()
+                ->where($authAttribute, '=', $username)
+                ->first()?->{$guidAttribute};
+    }
+}
+```
 
-        return is_a($existingUser, $eloquentModel) === true
-            ? $existingUser?->getAttributeValue($guidAttribute)
-            : $existingUser?->getAttributeValue($guidAttribute)[0];
+### Trait: LdapUniqueIdentifier
+
+The  ```LdapUniqueIdentifier``` trait provides a method ```uniqueIdentifier``` to fetch a user unique identifier (like a objectguid) from LDAP.
+
+```
+<?php
+
+namespace NetworkRailBusinessSystems\UserLogin\Traits;
+
+trait LdapUniqueIdentifier
+{
+    public static function uniqueIdentifier(string $username): ?string
+    {
+        // Model for the LDAP database
+        $ldapModel = config('user-login.ldap-user-model');
+
+        // Attribute that holds the unique identifier (e.g., objectguid)
+        $guidAttribute = config('user-login.ldap-unique-identifier');
+
+        // Attribute used to authenticate the user (e.g., samaccountname)
+        $authAttribute = config('user-login.ldap-model-identifier');
+
+        // Query the LDAP model and return unique identifier or null
+        return $ldapModel::query()
+                ->where($authAttribute, '=', $username)
+                ->first()?->getAttributeValue($guidAttribute)[0];
     }
 }
 ```
@@ -154,7 +177,7 @@ The package handles user routing and validation without requiring a custom Login
 
 To get the user login functionality up and running, follow these steps:
 
-1.In your User model or any other model you want to use for authentication, must implement the ```ExistingUser``` interface and use the ```ExistingUserUniqueIdentifier``` trait.
+1. In your User model or any other model you want to use for authentication, must implement the ```ExistingUser``` interface and use one of the provided traits (LdapUniqueIdentifier, DbUniqueIdentifier) to retrieve the unique identifier.
 
 ```
 <?php
@@ -167,8 +190,7 @@ use NetworkRailBusinessSystems\UserLogin\Traits\ExistingUserUniqueIdentifier;
 
 class User extends Model implements ExistingUser
 {
-    // Use the ExistingUserUniqueIdentifier trait to retrieve the user's unique identifier.
-    use ExistingUserUniqueIdentifier;
+    use LdapUniqueIdentifier;
 
     // Other logic...
 }

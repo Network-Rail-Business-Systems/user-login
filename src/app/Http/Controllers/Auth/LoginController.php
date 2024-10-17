@@ -71,8 +71,6 @@ class LoginController extends Controller
             'password' => $request->password,
         ];
 
-        $model = config('user-login.model');
-
         if ($this->syncExistingUser($details[$usernameKey]) === false) {
             return $this->loginFailed($details[$usernameKey]);
         }
@@ -85,7 +83,6 @@ class LoginController extends Controller
     protected function syncExistingUser(string $username): bool
     {
         $model = config('user-login.local-model');
-
         $modelIdentifier = config('user-login.local-model-identifier');
         $modelUniqueIdentifier = config('user-login.local-unique-identifier');
 

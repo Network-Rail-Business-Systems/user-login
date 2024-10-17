@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use NetworkRailBusinessSystems\UserLogin\Interfaces\ExistingUser;
 use NetworkRailBusinessSystems\UserLogin\Tests\Factories\UserFactory;
-use NetworkRailBusinessSystems\UserLogin\Traits\ExistingUserUniqueIdentifier;
+use NetworkRailBusinessSystems\UserLogin\Traits\DbUniqueIdentifier;
 
 class User extends Authenticatable implements ExistingUser
 {
-    use ExistingUserUniqueIdentifier;
+    use DbUniqueIdentifier;
     use HasFactory;
     use SoftDeletes;
 
