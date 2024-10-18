@@ -2,7 +2,7 @@
 
 namespace NetworkRailBusinessSystems\UserLogin\Traits;
 
-trait LdapUniqueIdentifier
+trait HasGuidInLdap
 {
     public static function uniqueIdentifier(string $username): ?string
     {

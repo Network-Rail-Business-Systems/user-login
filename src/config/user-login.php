@@ -42,7 +42,7 @@ return [
     * Configuration for the "Forgot Password" section in view.
     * You can set a description and routes for IT helpdesk or password reset.
     */
-    'forgot_password' => [
+    'forgot-password' => [
         'description' => null,
         'routes' => [
             'label' => 'name',

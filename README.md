@@ -30,56 +30,20 @@ php artisan vendor:publish --provider="NetworkRailBusinessSystems\UserLogin\Prov
 #### 3. Available Configuration Options
 After publishing, you can modify the following configuration options in the config/user-login.php file:
 
-```
-return [
-    /*
-     * The view to be used for the login page.
-     * Change to 'login' for custom login view.
-     */
-    'view' => 'gov-uk-login',
+| Option                  | Type   | Default                                              | Usage                                                           |
+|-------------------------|--------|------------------------------------------------------|-----------------------------------------------------------------|
+| view                    | string | gov-uk-login                                         | Customise the view to be used for the login page                |
+| auth-identifier         | string | samaccountname                                       | Customise the attribute used for authentication                 |
+| local-model             | class  | \App\Models\User::class                              | Customise the class for local user                         |
+| local-model-identifier  | string | username                                             | Customise the attribute identifies the user in local model      |
+| local-unique-identifier | string | guid                                                 | Customise the unique attribute identifies the user in local model |
+| ldap-model              | class  | \LdapRecord\Models\ActiveDirectory\User::class       | Customise the class for LDAP user                          |
+| ldap-model-identifier   | string | samaccountname                                       | Customise the attribute identifies the user in LDAP model       |
+| ldap-unique-identifier  | string | objectguid                                           | Customise the unique attribute identifies the user in LDAP model |
+| login-failed-message    | string | Sign-in failed; check your details and try again.    | Customise the message for login failure                         |
+| login-success-message   | string | You have successfully signed in.                     | Customise the message for login success                         |
+| forgot-password         | array  | 'description' => null, routes => ['label' => 'name'] | Customise the "Forgot Password" section in view  <br/>You can set a description and routes for IT helpdesk or password reset.               |
 
-    /*
-     * The attribute used for authentication.
-     * In the case of LDAP, this could be 'samaccountname'.
-     */
-    'auth-identifier' => 'samaccountname',
-    
-    /*
-    * Which User model to use locally for login
-    * Which attribute identifies the user in model
-    * Which attribute uniquely identifies the user in model
-    */
-    'local-model' => \App\Models\User::class,
-    'local-model-identifier' => 'username',
-    'local-unique-identifier' => 'guid',
-
-    /*
-    * Which LdapRecord User model to use to get the unique identifier
-    * Which attribute identifies the user in LDAP
-    * Which unique attribute identifies the user in LDAP
-    */
-    'ldap-user-model' => \LdapRecord\Models\ActiveDirectory\User::class,
-    'ldap-model-identifier' => 'samaccountname',
-    'ldap-unique-identifier' => 'objectguid',
-    
-    /*
-     * Custom messages for login success or failure.
-     */
-    'login-failed-message' => 'Sign-in failed; check your details and try again.',
-    'login-success-message' => 'You have successfully signed in.',
-
-    /*
-     * Configuration for the "Forgot Password" section in view.
-     * You can set a description and routes for IT helpdesk or password reset.
-     */
-    'forgot_password' => [
-        'description' => null,
-        'routes' => [
-            'label' => 'name',
-        ],
-    ],
-];
-```
 
 ## Routing
 
@@ -91,30 +55,15 @@ Route::userLogin();
 
 ## interface: ExistingUser
 
-The `ExistingUser` interface defines an abstract function for retrieving the unique identifier:
-
-```
-<?php
-
-namespace NetworkRailBusinessSystems\UserLogin\Interfaces;
-
-interface ExistingUser
-{
-    /*
-     * Retrieve the unique identifier for a user by their auth identifier (e.g., username or samaccountname).
-     * This method should return a unique identifier associated with the user, or null if the user does not exist.
-     */
-    public static function uniqueIdentifier(string $username): ?string;
-}
-```
+The `ExistingUser` interface defines an abstract function for retrieving the unique identifier
 
 ### Trait: HasGuidInDatabase
 
 The `HasGuidInDatabase` trait provides a method `uniqueIdentifier` to fetch a user unique identifier (like a GUID) from your local database.
 
-### Trait: LdapUniqueIdentifier
+### Trait: HasGuidInLdap
 
-The  `LdapUniqueIdentifier` trait provides a method `uniqueIdentifier` to fetch a user unique identifier (like a objectguid) from LDAP.
+The  `HasGuidInLdap` trait provides a method `uniqueIdentifier` to fetch a user unique identifier (like a objectguid) from LDAP.
 
 ### uniqueIdentifier($username)
 
@@ -130,20 +79,12 @@ The package handles user routing and validation without requiring a custom Login
 
 To get the user login functionality up and running, follow these steps:
 
-1. In your User model or any other model you want to use for authentication, must implement the `ExistingUser` interface and use one of the provided traits (LdapUniqueIdentifier, HasGuidInDatabase) to retrieve the unique identifier.
+1. In your User model or any other model you want to use for authentication, must implement the `ExistingUser` interface and use one of the provided traits (HasGuidInLdap, HasGuidInDatabase) to retrieve the unique identifier.
 
 ```
-<?php
-
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Model;
-use NetworkRailBusinessSystems\UserLogin\Interfaces\ExistingUser;
-use NetworkRailBusinessSystems\UserLogin\Traits\LdapUniqueIdentifier;
-
 class User extends Model implements ExistingUser
 {
-    use LdapUniqueIdentifier;
+    use HasGuidInLdap;
 
     // Other logic...
 }
@@ -154,3 +95,4 @@ class User extends Model implements ExistingUser
 ```
 Route::userLogin();
 ```
+

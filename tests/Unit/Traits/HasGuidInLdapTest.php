@@ -2,15 +2,14 @@
 
 namespace NetworkRailBusinessSystems\UserLogin\Tests\Unit\Traits;
 
-use Mockery as ldapMocker;
 use NetworkRailBusinessSystems\UserLogin\Tests\TestCase;
-use NetworkRailBusinessSystems\UserLogin\Traits\LdapUniqueIdentifier;
+use NetworkRailBusinessSystems\UserLogin\Traits\HasGuidInLdap;
 
-class LdapUniqueIdentifierTest extends TestCase
+class HasGuidInLdapTest extends TestCase
 {
     public function testRetrieveUniqueIdentifierFromLdap()
     {
-        $ldapModelMock = ldapMocker::mock('alias:LdapRecord\Models\ActiveDirectory\User');
+        $ldapModelMock = $this->mock('alias:LdapRecord\Models\ActiveDirectory\User');
 
         $ldapModelMock->shouldReceive('getAttributeValue')
             ->with('objectguid')
@@ -21,7 +20,7 @@ class LdapUniqueIdentifierTest extends TestCase
 
         $user = new class
         {
-            use LdapUniqueIdentifier;
+            use HasGuidInLdap;
         };
 
         $guid = $user::uniqueIdentifier('test-user');
