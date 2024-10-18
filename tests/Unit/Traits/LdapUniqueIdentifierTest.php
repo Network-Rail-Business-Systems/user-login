@@ -16,7 +16,7 @@ class LdapUniqueIdentifierTest extends TestCase
             ->with('objectguid')
             ->andReturn(['some-guid-value']);
 
-        $ldapModelMock->shouldReceive('query->where->first')
+        $ldapModelMock->shouldReceive('query->select->where->first')
             ->andReturn($ldapModelMock);
 
         $user = new class

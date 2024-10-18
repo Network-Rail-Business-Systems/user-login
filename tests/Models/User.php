@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use NetworkRailBusinessSystems\UserLogin\Interfaces\ExistingUser;
 use NetworkRailBusinessSystems\UserLogin\Tests\Factories\UserFactory;
-use NetworkRailBusinessSystems\UserLogin\Traits\DbUniqueIdentifier;
+use NetworkRailBusinessSystems\UserLogin\Traits\HasGuidInDatabase;
 
 class User extends Authenticatable implements ExistingUser
 {
-    use DbUniqueIdentifier;
     use HasFactory;
+    use HasGuidInDatabase;
     use SoftDeletes;
 
     protected $fillable = ['first_name', 'last_name', 'email', 'username'];
