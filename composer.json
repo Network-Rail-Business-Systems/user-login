@@ -27,7 +27,7 @@
     },
     "autoload": {
         "psr-4": {
-            "NetworkRailBusinessSystems\\UserLogin\\": "src/app/Providers/"
+            "NetworkRailBusinessSystems\\UserLogin\\": "src/app"
         }
     },
     "autoload-dev": {
@@ -38,7 +38,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "NetworkRailBusinessSystems\\UserLogin\\UserLoginServiceProvider"
+                "NetworkRailBusinessSystems\\UserLogin\\Providers\\UserLoginServiceProvider"
             ]
         }
     },
