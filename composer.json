@@ -27,7 +27,7 @@
     },
     "autoload": {
         "psr-4": {
-            "NetworkRailBusinessSystems\\UserLogin\\": "src/app/"
+            "NetworkRailBusinessSystems\\UserLogin\\": "src/app/Providers/"
         }
     },
     "autoload-dev": {
