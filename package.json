@@ -1,0 +1,22 @@
+{
+  "name": "user-login",
+  "description": "User login with active directory account with login blade templates",
+  "keywords": [
+    "laravel",
+    "login",
+    "user login"
+  ],
+  "author": "Ambreen Jamal",
+  "license": "MIT",
+  "homepage": "https://github.com/Network-Rail-Business-Systems/user-login",
+  "scripts": {
+    "larastan": "php vendor/bin/phpstan analyse --memory-limit 512M",
+    "pint": "php ./vendor/bin/pint",
+    "prepare": "husky install",
+    "test": "php vendor/bin/paratest",
+    "test-slow": "php vendor/bin/phpunit"
+  },
+  "devDependencies": {
+    "husky": "^9.1.6"
+  }
+}

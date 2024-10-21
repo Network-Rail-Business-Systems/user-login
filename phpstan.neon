@@ -1,0 +1,11 @@
+includes:
+  - ./vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 6
+    paths:
+        - src
+    ignoreErrors:
+        - identifier: missingType.iterableValue
+    excludePaths:
+        - src/config/user-login.php

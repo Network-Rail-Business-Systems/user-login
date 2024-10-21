@@ -1,3 +1,6 @@
-.idea
-*.gitignore:Zone.Identifier
-*.LICENSE:Zone.Identifier
+/.idea/
+/vendor/
+/.phpunit.cache/
+/node_modules/
+.phpunit.xml.bak
+.phpunit.result.cache
