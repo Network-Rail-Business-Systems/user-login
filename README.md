@@ -57,21 +57,21 @@ Route::userLogin();
 
 The `ExistingUser` interface defines an abstract function for retrieving the unique identifier
 
-### Trait: HasGuidInDatabase
+## Trait: HasGuidInDatabase
 
 The `HasGuidInDatabase` trait provides a method `uniqueIdentifier` to fetch a user unique identifier (like a GUID) from your local database.
 
-### Trait: HasGuidInLdap
+## Trait: HasGuidInLdap
 
 The  `HasGuidInLdap` trait provides a method `uniqueIdentifier` to fetch a user unique identifier (like a objectguid) from LDAP.
 
-### uniqueIdentifier($username)
+## uniqueIdentifier($username)
 
 - $username: This is the value used to authenticate the user.
 
 - The method returns the user GUID if found, or null if no match is found.
 
-# Usage
+## Usage
 
 The package handles user routing and validation without requiring a custom Login Controller and Login Request.
 
@@ -95,4 +95,3 @@ class User extends Model implements ExistingUser
 ```
 Route::userLogin();
 ```
-
