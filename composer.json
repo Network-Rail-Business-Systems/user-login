@@ -14,7 +14,9 @@
     "require": {
         "php": "^8.3",
         "illuminate/support": "^11",
-        "anthonyedmonds/govuk-laravel": "^5"
+        "anthonyedmonds/govuk-laravel": "^5",
+        "directorytree/ldaprecord-laravel": "^3",
+        "ext-ldap": "*"
     },
     "require-dev": {
         "laravel/pint": "^1",

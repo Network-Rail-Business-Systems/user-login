@@ -1,5 +1,7 @@
 <?php
 
+use LdapRecord\Connection;
+
 return [
     /*
      * This specifies the login view to be used.
@@ -48,4 +50,19 @@ return [
             'label' => 'name',
         ],
     ],
+
+    $connection = new Connection([
+            'hosts' => ['corp.ukrail.net'],
+            'username' => 'null',
+            'password' => 'null',
+            'port' => 389,
+            'base_dn' => 'dc=corp,dc=ukrail,dc=net',
+            'timeout' => 5,
+            'use_ssl' => false,
+            'use_tls' => false,
+
+            'options' => [
+            LDAP_OPT_X_TLS_REQUIRE_CERT => LDAP_OPT_X_TLS_HARD
+        ],
+    ]),
 ];
