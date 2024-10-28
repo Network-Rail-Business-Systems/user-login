@@ -44,7 +44,7 @@ class LoginController extends Controller
                         ->hint($questions[0]['hint'])
                         ->width(20),
 
-                    GovukQuestion::input($questions[1]['label'], $questions[1]['name'])
+                    GovukQuestion::password($questions[1]['label'], $questions[1]['name'])
                         ->hint($questions[1]['hint'])
                         ->width(20),
                 ],
