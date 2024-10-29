@@ -31,8 +31,7 @@ abstract class TestCase extends BaseTestCase
 
         $this->createLocalUser();
 
-        $connection = new Connection(
-            [
+        $connection = new Connection([
                 'hosts' => ['corp.ukrail.net'],
                 'username' => 'null',
                 'password' => 'null',
@@ -41,8 +40,7 @@ abstract class TestCase extends BaseTestCase
                 'timeout' => 5,
                 'use_ssl' => false,
                 'use_tls' => false,
-            ]
-        );
+        ]);
 
         Container::addConnection($connection);
     }

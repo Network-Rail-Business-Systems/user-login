@@ -11,7 +11,7 @@ class SearchByEmailTest extends TestCase
     {
         parent::setUp();
 
-//        $this->useLdapEmulator();
+//        $this->useLdapEmulator(); //TODO setting up connection and users
     }
 
     public function testFindsEmails(): void
