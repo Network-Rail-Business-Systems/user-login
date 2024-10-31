@@ -4,18 +4,12 @@ namespace NetworkRailBusinessSystems\UserLogin\Tests;
 
 use Illuminate\Support\Facades\Config;
 use Laracasts\Flash\FlashServiceProvider;
-use LdapRecord\Configuration\ConfigurationException;
-use LdapRecord\Connection;
-use LdapRecord\Container;
 use NetworkRailBusinessSystems\UserLogin\Providers\UserLoginServiceProvider;
 use NetworkRailBusinessSystems\UserLogin\Tests\Models\User;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-    /**
-     * @throws ConfigurationException
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -30,19 +24,6 @@ abstract class TestCase extends BaseTestCase
         $this->setUpRoutes();
 
         $this->createLocalUser();
-
-        $connection = new Connection([
-                'hosts' => ['corp.ukrail.net'],
-                'username' => 'null',
-                'password' => 'null',
-                'port' => 389,
-                'base_dn' => 'dc=corp,dc=ukrail,dc=net',
-                'timeout' => 5,
-                'use_ssl' => false,
-                'use_tls' => false,
-        ]);
-
-        Container::addConnection($connection);
     }
 
     protected function getPackageProviders($app): array

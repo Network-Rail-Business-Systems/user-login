@@ -1,7 +1,5 @@
 <?php
 
-use LdapRecord\Connection;
-
 return [
     /*
      * This specifies the login view to be used.
@@ -23,6 +21,7 @@ return [
     'local-model' => \App\Models\User::class,
     'local-model-identifier' => 'username',
     'local-unique-identifier' => 'guid',
+    'local-email-identifier' => 'email',
 
     /*
     * Which LdapRecord User model to use to get the unique identifier
@@ -50,19 +49,4 @@ return [
             'label' => 'name',
         ],
     ],
-
-    $connection = new Connection([
-            'hosts' => ['corp.ukrail.net'],
-            'username' => 'null',
-            'password' => 'null',
-            'port' => 389,
-            'base_dn' => 'dc=corp,dc=ukrail,dc=net',
-            'timeout' => 5,
-            'use_ssl' => false,
-            'use_tls' => false,
-
-            'options' => [
-            LDAP_OPT_X_TLS_REQUIRE_CERT => LDAP_OPT_X_TLS_HARD
-        ],
-    ]),
 ];

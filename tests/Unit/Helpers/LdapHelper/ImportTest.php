@@ -2,45 +2,80 @@
 
 namespace NetworkRailBusinessSystems\UserLogin\Tests\Unit\Helpers\LdapHelper;
 
-use NetworkRailBusinessSystems\UserLogin\Http\Helpers\LdapHelper;
+use Illuminate\Database\Eloquent\Model;
+use Mockery\Mock;
+use NetworkRailBusinessSystems\UserLogin\Helpers\LdapHelper;
+use NetworkRailBusinessSystems\UserLogin\Tests\Models\User;
 use NetworkRailBusinessSystems\UserLogin\Tests\TestCase;
 
 class ImportTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-//        $this->useLdapEmulator(); //TODO setting up connection and users
-    }
-
     public function testThrowsExceptionWhenNotInDirectory(): void
     {
-        $this->expectException(\ErrorException::class);
-        $this->expectExceptionMessage(
-            'Import cancelled; no User was found with the e-mail "ringwraith@example.com" in Active Directory',
-        );
+        $this->mock('alias:LdapRecord\Models\ActiveDirectory\User', function ($mock) {
+            $mock->shouldReceive('query->where->andFilter->select->limit->get')
+                ->andReturn([]);
+        });
 
-        LdapHelper::import('ringwraith@example.com');
+        $this->mock('overload:Illuminate\Support\Facades\Artisan', function ($mock) {
+            /** @var Mock $mock */
+            $mock->shouldReceive('call')
+                ->andReturnNull();
+        });
+
+        $this->expectException(\ErrorException::class);
+
+        $this->assertEquals(
+            'Import cancelled; no User was found with the e-mail "ringwraith@example.com" in Active Directory',
+            LdapHelper::import('ringwraith@example.com'),
+        );
     }
 
     public function testImportsUser(): void
     {
-        LdapHelper::import('peregrin.took@example.com');
+        $this->mock('alias:LdapRecord\Models\ActiveDirectory\User', function ($mock) {
+            $mock->shouldReceive('query->where->andFilter->select->limit->get')
+                ->andReturn([Model::class]);
+        });
 
-        $this->assertDatabaseHas('users', [
-            'username' => 'pippin',
-        ]);
+        $this->mock('overload:Illuminate\Support\Facades\Artisan', function ($mock) {
+            /** @var Mock $mock */
+            $mock->shouldReceive('call')
+                ->andReturnUsing(function () {
+                    User::factory()->create([
+                        'email' => 'peregrin.took@example.com',
+                    ]);
+                })->once();
+        });
+
+        $this->assertEquals(
+            'peregrin.took@example.com',
+            LdapHelper::import('peregrin.took@example.com')->email,
+        );
     }
 
     public function testThrowsExceptionWhenUserMissing(): void
     {
-        $this->expectException(\ErrorException::class);
-        $this->expectExceptionMessage(
-            'Import failed; no User was found with the e-mail "Peregrin.Took@example.com" in this system',
-        );
+        $this->mock('alias:LdapRecord\Models\ActiveDirectory\User', function ($mock) {
+            $mock->shouldReceive('query->where->andFilter->select->limit->get')
+                ->andReturn([Model::class]);
+        });
 
-        // This test works because SQLITE is case-sensitive!
-        LdapHelper::import('Peregrin.Took@example.com');
+        $this->mock('overload:Illuminate\Support\Facades\Artisan', function ($mock) {
+            /** @var Mock $mock */
+            $mock->shouldReceive('call')
+                ->andReturnUsing(function () {
+                    User::factory()->create([
+                        'email' => 'peregrin.took@example.com',
+                    ]);
+                })->once();
+        });
+
+        $this->expectException(\ErrorException::class);
+
+        $this->assertEquals(
+            'Import failed; no User was found with the e-mail "Peregrin.Took@example.com"',
+            LdapHelper::import('Peregrin.Took@example.com')
+        );
     }
 }

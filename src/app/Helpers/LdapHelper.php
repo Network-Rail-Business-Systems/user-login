@@ -1,20 +1,20 @@
 <?php
 
-namespace NetworkRailBusinessSystems\UserLogin\Http\Helpers;
+namespace NetworkRailBusinessSystems\UserLogin\Helpers;
 
 use App\Models\User;
 use ErrorException;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;
-use LdapRecord\Container;
-use LdapRecord\Query\Builder;
 use Throwable;
 
 class LdapHelper
 {
     public static function searchByEmail(string $term, int $limit = 5, array $select = []): array
     {
-        return Container::getDefaultConnection()
-            ->query()
+        $ldapModel = config('user-login.ldap-user-model');
+
+        return $ldapModel::query()
             ->where('mail', 'starts_with', $term)
             ->andFilter(function (Builder $query) {
                 $query->whereHas('givenname')->whereHas('sn');
@@ -26,8 +26,9 @@ class LdapHelper
 
     public static function searchByName(string $term, int $limit = 5, array $select = []): array
     {
-        return Container::getDefaultConnection()
-            ->query()
+        $ldapModel = config('user-login.ldap-user-model');
+
+        return $ldapModel::query()
             ->where('givenname', 'starts_with', $term)
             ->orWhere('sn', 'starts_with', $term)
             ->andFilter(function (Builder $query) {
@@ -38,8 +39,11 @@ class LdapHelper
             ->get();
     }
 
-    public static function import(string $email): User
+    public static function import(string $email): Model
     {
+        $localModel = config('user-login.local-model');
+        $emailKey = config('user-login.local-email-identifier');
+
         if (empty(self::searchByEmail($email)) !== false) {
             throw new ErrorException(
                 "Import cancelled; no User was found with the e-mail \"$email\" in Active Directory",
@@ -56,7 +60,9 @@ class LdapHelper
         ]);
 
         try {
-            return User::byEmail($email)->firstOrFail();
+            return $localModel::query()
+                ->where($emailKey, '=', $email)
+                ->firstOrFail();
         } catch (Throwable $exception) {
             throw new ErrorException(
                 "Import failed; no User was found with the e-mail \"$email\" in this system",
