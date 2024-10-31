@@ -3,7 +3,6 @@
 namespace NetworkRailBusinessSystems\UserLogin\Tests\Unit\Helpers\LdapHelper;
 
 use Illuminate\Database\Eloquent\Model;
-use Mockery\Mock;
 use NetworkRailBusinessSystems\UserLogin\Helpers\LdapHelper;
 use NetworkRailBusinessSystems\UserLogin\Tests\Models\User;
 use NetworkRailBusinessSystems\UserLogin\Tests\TestCase;
@@ -18,7 +17,6 @@ class ImportTest extends TestCase
         });
 
         $this->mock('overload:Illuminate\Support\Facades\Artisan', function ($mock) {
-            /** @var Mock $mock */
             $mock->shouldReceive('call')
                 ->andReturnNull();
         });
@@ -39,7 +37,6 @@ class ImportTest extends TestCase
         });
 
         $this->mock('overload:Illuminate\Support\Facades\Artisan', function ($mock) {
-            /** @var Mock $mock */
             $mock->shouldReceive('call')
                 ->andReturnUsing(function () {
                     User::factory()->create([
@@ -62,7 +59,6 @@ class ImportTest extends TestCase
         });
 
         $this->mock('overload:Illuminate\Support\Facades\Artisan', function ($mock) {
-            /** @var Mock $mock */
             $mock->shouldReceive('call')
                 ->andReturnUsing(function () {
                     User::factory()->create([
