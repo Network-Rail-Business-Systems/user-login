@@ -2,6 +2,7 @@
 
 namespace NetworkRailBusinessSystems\UserLogin\Tests\Unit\Helpers\LdapHelper;
 
+use ErrorException;
 use Illuminate\Database\Eloquent\Model;
 use NetworkRailBusinessSystems\UserLogin\Helpers\LdapHelper;
 use NetworkRailBusinessSystems\UserLogin\Tests\Models\User;
@@ -13,7 +14,7 @@ class ImportTest extends TestCase
     {
         $this->runMock(true);
 
-        $this->expectException(\ErrorException::class);
+        $this->expectException(ErrorException::class);
 
         $this->assertEquals(
             'Import cancelled; no User was found with the e-mail "ringwraith@example.com" in Active Directory',
@@ -35,7 +36,7 @@ class ImportTest extends TestCase
     {
         $this->runMock();
 
-        $this->expectException(\ErrorException::class);
+        $this->expectException(ErrorException::class);
 
         $this->assertEquals(
             'Import failed; no User was found with the e-mail "Peregrin.Took@example.com"',
