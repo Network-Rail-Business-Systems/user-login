@@ -21,6 +21,7 @@ return [
     'local-model' => \App\Models\User::class,
     'local-model-identifier' => 'username',
     'local-unique-identifier' => 'guid',
+    'local-email-identifier' => 'email',
 
     /*
     * Which LdapRecord User model to use to get the unique identifier

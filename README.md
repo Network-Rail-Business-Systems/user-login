@@ -30,19 +30,20 @@ php artisan vendor:publish --provider="NetworkRailBusinessSystems\UserLogin\Prov
 #### 3. Available Configuration Options
 After publishing, you can modify the following configuration options in the config/user-login.php file:
 
-| Option                  | Type   | Default                                              | Usage                                                           |
-|-------------------------|--------|------------------------------------------------------|-----------------------------------------------------------------|
-| view                    | string | gov-uk-login                                         | Customise the view to be used for the login page                |
-| auth-identifier         | string | samaccountname                                       | Customise the attribute used for authentication                 |
-| local-model             | class  | \App\Models\User::class                              | Customise the class for local user                         |
-| local-model-identifier  | string | username                                             | Customise the attribute identifies the user in local model      |
-| local-unique-identifier | string | guid                                                 | Customise the unique attribute identifies the user in local model |
-| ldap-model              | class  | \LdapRecord\Models\ActiveDirectory\User::class       | Customise the class for LDAP user                          |
-| ldap-model-identifier   | string | samaccountname                                       | Customise the attribute identifies the user in LDAP model       |
-| ldap-unique-identifier  | string | objectguid                                           | Customise the unique attribute identifies the user in LDAP model |
-| login-failed-message    | string | Sign-in failed; check your details and try again.    | Customise the message for login failure                         |
-| login-success-message   | string | You have successfully signed in.                     | Customise the message for login success                         |
-| forgot-password         | array  | 'description' => null, routes => ['label' => 'name'] | Customise the "Forgot Password" section in view  <br/>You can set a description and routes for IT helpdesk or password reset.               |
+| Option                  | Type   | Default                                              | Usage                                                                                                                         |
+|-------------------------|--------|------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
+| view                    | string | gov-uk-login                                         | Customise the view to be used for the login page                                                                              |
+| auth-identifier         | string | samaccountname                                       | Customise the attribute used for authentication                                                                               |
+| local-email-indentifer  | string | email                                                | Customise the email attribute for the user in local model                                                                     |
+| local-model             | class  | \App\Models\User::class                              | Customise the class for local user                                                                                            |
+| local-model-identifier  | string | username                                             | Customise the attribute identifies the user in local model                                                                    |
+| local-unique-identifier | string | guid                                                 | Customise the unique attribute identifies the user in local model                                                             |
+| ldap-model              | class  | \LdapRecord\Models\ActiveDirectory\User::class       | Customise the class for LDAP user                                                                                             |
+| ldap-model-identifier   | string | samaccountname                                       | Customise the attribute identifies the user in LDAP model                                                                     |
+| ldap-unique-identifier  | string | objectguid                                           | Customise the unique attribute identifies the user in LDAP model                                                              |
+| login-failed-message    | string | Sign-in failed; check your details and try again.    | Customise the message for login failure                                                                                       |
+| login-success-message   | string | You have successfully signed in.                     | Customise the message for login success                                                                                       |
+| forgot-password         | array  | 'description' => null, routes => ['label' => 'name'] | Customise the "Forgot Password" section in view  <br/>You can set a description and routes for IT helpdesk or password reset. |
 
 
 ## Routing
