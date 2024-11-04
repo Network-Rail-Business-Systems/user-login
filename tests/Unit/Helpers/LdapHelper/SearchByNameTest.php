@@ -11,6 +11,7 @@ class SearchByNameTest extends TestCase
     {
         $this->mock('alias:LdapRecord\Models\ActiveDirectory\User', function ($mock) {
             $mock->shouldReceive('query->where->orWhere->andFilter->select->limit->get')
+                ->once()
                 ->andReturn([]);
         });
 

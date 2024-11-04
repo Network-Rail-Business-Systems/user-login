@@ -4,6 +4,7 @@ namespace NetworkRailBusinessSystems\UserLogin\Helpers;
 
 use App\Models\User;
 use ErrorException;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;
 use Throwable;
@@ -56,7 +57,7 @@ class LdapHelper
             '--restore' => true,
             '--delete' => false,
             '--delete-missing' => false,
-            '--filter' => "(mail={$email})",
+            '--filter' => "(mail=$email)",
         ]);
 
         try {

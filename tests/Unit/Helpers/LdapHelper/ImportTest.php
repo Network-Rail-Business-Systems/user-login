@@ -11,15 +11,7 @@ class ImportTest extends TestCase
 {
     public function testThrowsExceptionWhenNotInDirectory(): void
     {
-        $this->mock('alias:LdapRecord\Models\ActiveDirectory\User', function ($mock) {
-            $mock->shouldReceive('query->where->andFilter->select->limit->get')
-                ->andReturn([]);
-        });
-
-        $this->mock('overload:Illuminate\Support\Facades\Artisan', function ($mock) {
-            $mock->shouldReceive('call')
-                ->andReturnNull();
-        });
+        $this->runMock(true);
 
         $this->expectException(\ErrorException::class);
 
@@ -31,19 +23,7 @@ class ImportTest extends TestCase
 
     public function testImportsUser(): void
     {
-        $this->mock('alias:LdapRecord\Models\ActiveDirectory\User', function ($mock) {
-            $mock->shouldReceive('query->where->andFilter->select->limit->get')
-                ->andReturn([Model::class]);
-        });
-
-        $this->mock('overload:Illuminate\Support\Facades\Artisan', function ($mock) {
-            $mock->shouldReceive('call')
-                ->andReturnUsing(function () {
-                    User::factory()->create([
-                        'email' => 'peregrin.took@example.com',
-                    ]);
-                })->once();
-        });
+        $this->runMock();
 
         $this->assertEquals(
             'peregrin.took@example.com',
@@ -53,19 +33,7 @@ class ImportTest extends TestCase
 
     public function testThrowsExceptionWhenUserMissing(): void
     {
-        $this->mock('alias:LdapRecord\Models\ActiveDirectory\User', function ($mock) {
-            $mock->shouldReceive('query->where->andFilter->select->limit->get')
-                ->andReturn([Model::class]);
-        });
-
-        $this->mock('overload:Illuminate\Support\Facades\Artisan', function ($mock) {
-            $mock->shouldReceive('call')
-                ->andReturnUsing(function () {
-                    User::factory()->create([
-                        'email' => 'peregrin.took@example.com',
-                    ]);
-                })->once();
-        });
+        $this->runMock();
 
         $this->expectException(\ErrorException::class);
 
@@ -73,5 +41,38 @@ class ImportTest extends TestCase
             'Import failed; no User was found with the e-mail "Peregrin.Took@example.com"',
             LdapHelper::import('Peregrin.Took@example.com')
         );
+    }
+
+    public function runMock(bool $returnNull = false): void
+    {
+        if ($returnNull === false) {
+            $this->mock('alias:LdapRecord\Models\ActiveDirectory\User', function ($mock) {
+                $mock->shouldReceive('query->where->andFilter->select->limit->get')
+                    ->once()
+                    ->andReturn([Model::class]);
+            });
+
+            $this->mock('overload:Illuminate\Support\Facades\Artisan', function ($mock) {
+                $mock->shouldReceive('call')
+                    ->once()
+                    ->andReturnUsing(function () {
+                        User::factory()->create([
+                            'email' => 'peregrin.took@example.com',
+                        ]);
+                    });
+            });
+        } else {
+            $this->mock('alias:LdapRecord\Models\ActiveDirectory\User', function ($mock) {
+                $mock->shouldReceive('query->where->andFilter->select->limit->get')
+                    ->once()
+                    ->andReturn([]);
+            });
+
+            $this->mock('overload:Illuminate\Support\Facades\Artisan', function ($mock) {
+                $mock->shouldReceive('call')
+                    ->once()
+                    ->andReturnNull();
+            });
+        }
     }
 }
