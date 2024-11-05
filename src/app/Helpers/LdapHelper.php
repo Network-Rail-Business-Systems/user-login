@@ -4,7 +4,7 @@ namespace NetworkRailBusinessSystems\UserLogin\Helpers;
 
 use App\Models\User;
 use ErrorException;
-use LdapRecord\Models\Collection;
+use Illuminate\Support\Collection;
 use LdapRecord\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;

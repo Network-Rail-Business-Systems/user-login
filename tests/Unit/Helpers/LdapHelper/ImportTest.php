@@ -4,10 +4,10 @@ namespace NetworkRailBusinessSystems\UserLogin\Tests\Unit\Helpers\LdapHelper;
 
 use ErrorException;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use NetworkRailBusinessSystems\UserLogin\Helpers\LdapHelper;
 use NetworkRailBusinessSystems\UserLogin\Tests\Models\User;
 use NetworkRailBusinessSystems\UserLogin\Tests\TestCase;
-use LdapRecord\Models\Collection;
 
 class ImportTest extends TestCase
 {
@@ -67,7 +67,7 @@ class ImportTest extends TestCase
             $this->mock('alias:LdapRecord\Models\ActiveDirectory\User', function ($mock) {
                 $mock->shouldReceive('query->where->andFilter->select->limit->get')
                     ->once()
-                    ->andReturn(new Collection);
+                    ->andReturn(new Collection());
             });
 
             $this->mock('overload:Illuminate\Support\Facades\Artisan', function ($mock) {
