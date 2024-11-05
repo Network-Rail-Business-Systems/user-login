@@ -11,12 +11,12 @@
   "homepage": "https://github.com/Network-Rail-Business-Systems/user-login",
   "scripts": {
     "larastan": "php vendor/bin/phpstan analyse --memory-limit 512M",
-    "pint": "php ./vendor/bin/pint",
+    "pint": "php ./vendor/bin/pint --preset=per",
     "prepare": "husky install",
     "test": "php vendor/bin/paratest",
     "test-slow": "php vendor/bin/phpunit"
   },
   "devDependencies": {
-    "husky": "^9.1.6"
+    "husky": "^9"
   }
 }
