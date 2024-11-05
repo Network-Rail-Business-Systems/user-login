@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use NetworkRailBusinessSystems\UserLogin\Helpers\LdapHelper;
 use NetworkRailBusinessSystems\UserLogin\Tests\Models\User;
 use NetworkRailBusinessSystems\UserLogin\Tests\TestCase;
+use LdapRecord\Models\Collection;
 
 class ImportTest extends TestCase
 {
@@ -50,7 +51,7 @@ class ImportTest extends TestCase
             $this->mock('alias:LdapRecord\Models\ActiveDirectory\User', function ($mock) {
                 $mock->shouldReceive('query->where->andFilter->select->limit->get')
                     ->once()
-                    ->andReturn([Model::class]);
+                    ->andReturn(new Collection(Model::class));
             });
 
             $this->mock('overload:Illuminate\Support\Facades\Artisan', function ($mock) {
@@ -66,7 +67,7 @@ class ImportTest extends TestCase
             $this->mock('alias:LdapRecord\Models\ActiveDirectory\User', function ($mock) {
                 $mock->shouldReceive('query->where->andFilter->select->limit->get')
                     ->once()
-                    ->andReturn([]);
+                    ->andReturn(new Collection);
             });
 
             $this->mock('overload:Illuminate\Support\Facades\Artisan', function ($mock) {

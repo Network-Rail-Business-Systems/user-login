@@ -4,14 +4,15 @@ namespace NetworkRailBusinessSystems\UserLogin\Helpers;
 
 use App\Models\User;
 use ErrorException;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use LdapRecord\Models\Collection;
+use LdapRecord\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;
 use Throwable;
 
 class LdapHelper
 {
-    public static function searchByEmail(string $term, int $limit = 5, array $select = []): array
+    public static function searchByEmail(string $term, int $limit = 5, array $select = []): Collection
     {
         $ldapModel = config('user-login.ldap-user-model');
 
@@ -25,7 +26,7 @@ class LdapHelper
             ->get();
     }
 
-    public static function searchByName(string $term, int $limit = 5, array $select = []): array
+    public static function searchByName(string $term, int $limit = 5, array $select = []): Collection
     {
         $ldapModel = config('user-login.ldap-user-model');
 
@@ -45,7 +46,7 @@ class LdapHelper
         $localModel = config('user-login.local-model');
         $emailKey = config('user-login.local-email-identifier');
 
-        if (empty(self::searchByEmail($email)) !== false) {
+        if (self::searchByEmail($email)->isEmpty() !== false) {
             throw new ErrorException(
                 "Import cancelled; no User was found with the e-mail \"$email\" in Active Directory",
             );
