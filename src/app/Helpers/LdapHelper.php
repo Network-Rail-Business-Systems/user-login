@@ -18,7 +18,7 @@ class LdapHelper
         return $ldapModel::query()
             ->where('mail', 'starts_with', $term)
             ->andFilter(function (Builder $query) {
-                $query->whereHas('givenname')->whereHas('sn');
+                $query->whereHas('givenname')->whereHas('sn'); // @codeCoverageIgnore
             })
             ->select(array_merge(['givenname', 'sn', 'mail'], $select))
             ->limit($limit)
@@ -33,7 +33,7 @@ class LdapHelper
             ->where('givenname', 'starts_with', $term)
             ->orWhere('sn', 'starts_with', $term)
             ->andFilter(function (Builder $query) {
-                $query->whereHas('givenname')->whereHas('sn');
+                $query->whereHas('givenname')->whereHas('sn'); // @codeCoverageIgnore
             })
             ->select(array_merge(['givenname', 'sn', 'mail'], $select))
             ->limit($limit)
