@@ -41,7 +41,7 @@ class ImportTest extends TestCase
 
         $this->assertEquals(
             'Import failed; no User was found with the e-mail "Peregrin.Took@example.com"',
-            LdapHelper::import('Peregrin.Took@example.com')
+            LdapHelper::import('Peregrin.Took@example.com'),
         );
     }
 

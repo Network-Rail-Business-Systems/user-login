@@ -23,7 +23,7 @@ class SignOutTest extends TestCase
         $this->user = User::factory()->create();
         Auth::loginUsingId($this->user);
 
-        $this->controller = new LoginController;
+        $this->controller = new LoginController();
         $this->response = $this->controller->signOut();
     }
 

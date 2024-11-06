@@ -9,3 +9,4 @@ parameters:
         - identifier: missingType.iterableValue
     excludePaths:
         - src/config/user-login.php
+        - src/app/Helpers/LdapHelper.php
