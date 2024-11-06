@@ -2,7 +2,6 @@
 
 namespace NetworkRailBusinessSystems\UserLogin\Helpers;
 
-use App\Models\User;
 use ErrorException;
 use Illuminate\Support\Collection;
 use LdapRecord\Query\Builder;

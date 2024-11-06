@@ -45,7 +45,7 @@ abstract class TestCase extends BaseTestCase
     {
         config()->set('database.default', 'sqlite');
 
-        $this->loadMigrationsFrom(__DIR__.'/../tests/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../tests/Migrations');
     }
 
     public function createLocalUser(): void

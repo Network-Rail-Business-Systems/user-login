@@ -16,7 +16,7 @@ class SignInTest extends TestCase
     {
         parent::setUp();
 
-        $this->controller = new LoginController;
+        $this->controller = new LoginController();
     }
 
     public function testSignsIn(): void
@@ -43,7 +43,7 @@ class SignInTest extends TestCase
 
         $this->assertEquals(
             'Sign-in failed; check your details and try again',
-            flash()->messages->first()->message
+            flash()->messages->first()->message,
         );
     }
 

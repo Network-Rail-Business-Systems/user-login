@@ -18,8 +18,7 @@ class HasGuidInLdapTest extends TestCase
                 ->andReturn($mock);
         });
 
-        $user = new class
-        {
+        $user = new class {
             use HasGuidInLdap;
         };
 

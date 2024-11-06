@@ -17,7 +17,7 @@ class IndexTest extends TestCase
     {
         parent::setUp();
 
-        $this->controller = new LoginController;
+        $this->controller = new LoginController();
     }
 
     public function testIndexWithGovUkLoginView()
@@ -28,11 +28,12 @@ class IndexTest extends TestCase
 
         $this->assertEquals(
             'What is your username?',
-            $this->response->getData()['questions'][0]->label);
+            $this->response->getData()['questions'][0]->label,
+        );
 
         $this->assertEquals(
             'What is your password?',
-            $this->response->getData()['questions'][1]->label
+            $this->response->getData()['questions'][1]->label,
         );
 
         $this->assertEquals(
@@ -54,18 +55,19 @@ class IndexTest extends TestCase
 
         $this->assertInstanceOf(View::class, $this->response);
 
-        $this->assertEquals([
+        $this->assertEquals(
             [
-                'name' => 'username',
-                'label' => 'What is your username?',
-                'hint' => 'The username you use to access your Windows device, such as jdoe3.',
-            ],
-            [
-                'name' => 'password',
-                'label' => 'What is your password?',
-                'hint' => 'The password you use to access your Windows device.',
-            ]],
-            $this->response->getData()['questions']
+                [
+                    'name' => 'username',
+                    'label' => 'What is your username?',
+                    'hint' => 'The username you use to access your Windows device, such as jdoe3.',
+                ],
+                [
+                    'name' => 'password',
+                    'label' => 'What is your password?',
+                    'hint' => 'The password you use to access your Windows device.',
+                ]],
+            $this->response->getData()['questions'],
         );
 
         $this->assertEquals(

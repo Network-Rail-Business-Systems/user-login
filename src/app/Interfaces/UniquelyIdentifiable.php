@@ -2,7 +2,7 @@
 
 namespace NetworkRailBusinessSystems\UserLogin\Interfaces;
 
-interface ExistingUser
+interface UniquelyIdentifiable
 {
     /*
      * Retrieve the unique identifier for a user by their auth identifier (e.g., username or samaccountname)

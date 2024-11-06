@@ -5,11 +5,11 @@ namespace NetworkRailBusinessSystems\UserLogin\Tests\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use NetworkRailBusinessSystems\UserLogin\Interfaces\ExistingUser;
+use NetworkRailBusinessSystems\UserLogin\Interfaces\UniquelyIdentifiable;
 use NetworkRailBusinessSystems\UserLogin\Tests\Factories\UserFactory;
 use NetworkRailBusinessSystems\UserLogin\Traits\HasGuidInDatabase;
 
-class User extends Authenticatable implements ExistingUser
+class User extends Authenticatable implements UniquelyIdentifiable
 {
     use HasFactory;
     use HasGuidInDatabase;
@@ -40,6 +40,6 @@ class User extends Authenticatable implements ExistingUser
     // Factory
     protected static function newFactory(): UserFactory
     {
-        return new UserFactory;
+        return new UserFactory();
     }
 }

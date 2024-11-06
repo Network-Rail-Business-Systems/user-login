@@ -11,8 +11,8 @@ class UserLoginServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../../config/user-login.php',
-            'user-login'
+            __DIR__ . '/../../config/user-login.php',
+            'user-login',
         );
     }
 
@@ -28,11 +28,11 @@ class UserLoginServiceProvider extends ServiceProvider
         $currentTimeStamp = date('Y_m_d_His');
 
         $this->publishes([
-            __DIR__.'/../../config/user-login.php' => config_path('user-login.php'),
+            __DIR__ . '/../../config/user-login.php' => config_path('user-login.php'),
         ], 'config');
 
         $this->publishes([
-            __DIR__.'/../../resources/views' => resource_path('views/vendor/user-login'),
+            __DIR__ . '/../../resources/views' => resource_path('views/vendor/user-login'),
         ], 'views');
     }
 
@@ -56,6 +56,6 @@ class UserLoginServiceProvider extends ServiceProvider
 
     protected function bootViews(): void
     {
-        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'user-login');
+        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'user-login');
     }
 }
