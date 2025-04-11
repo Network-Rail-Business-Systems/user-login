@@ -10,3 +10,4 @@ parameters:
     excludePaths:
         - src/config/user-login.php
         - src/app/Helpers/LdapHelper.php
+        - src/app/Traits

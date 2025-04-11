@@ -12,16 +12,16 @@
         }
     ],
     "require": {
-        "php": "^8.3",
-        "illuminate/support": "^11",
+        "php": "^8",
+        "illuminate/support": "^12",
         "anthonyedmonds/govuk-laravel": "^5"
     },
     "require-dev": {
         "laravel/pint": "^1",
-        "orchestra/testbench": "^9",
-        "phpunit/phpunit": "^11",
+        "orchestra/testbench": "^10",
+        "phpunit/phpunit": "^12",
         "brianium/paratest": "^7",
-        "larastan/larastan": "^2",
+        "larastan/larastan": "^3",
         "laracasts/flash": "^3",
         "networkrailbusinesssystems/badges": "^1"
     },
