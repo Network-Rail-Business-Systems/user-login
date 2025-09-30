@@ -28,12 +28,12 @@ class IndexTest extends TestCase
 
         $this->assertEquals(
             'What is your username?',
-            $this->response->getData()['questions'][0]->label,
+            $this->response->getData()['questions'][0]['label'],
         );
 
         $this->assertEquals(
             'What is your password?',
-            $this->response->getData()['questions'][1]->label,
+            $this->response->getData()['questions'][1]['label'],
         );
 
         $this->assertEquals(
