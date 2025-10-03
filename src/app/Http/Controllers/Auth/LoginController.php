@@ -3,7 +3,6 @@
 namespace NetworkRailBusinessSystems\UserLogin\Http\Controllers\Auth;
 
 use AnthonyEdmonds\GovukLaravel\Helpers\GovukPage;
-use AnthonyEdmonds\GovukLaravel\Helpers\GovukQuestion;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
@@ -40,13 +39,18 @@ class LoginController extends Controller
             ? GovukPage::questions(
                 'Sign in',
                 [
-                    GovukQuestion::input($questions[0]['label'], $questions[0]['name'])
-                        ->hint($questions[0]['hint'])
-                        ->width(20),
-
-                    GovukQuestion::password($questions[1]['label'], $questions[1]['name'])
-                        ->hint($questions[1]['hint'])
-                        ->width(20),
+                    [
+                        'label' => $questions[0]['label'],
+                        'name' => $questions[0]['name'],
+                        'hint' => $questions[0]['hint'],
+                        'width' => 20,
+                    ],
+                    [
+                        'label' => $questions[1]['label'],
+                        'name' => $questions[1]['name'],
+                        'hint' => $questions[1]['hint'],
+                        'width' => 20,
+                    ],
                 ],
                 $buttonLabel,
                 $action,
