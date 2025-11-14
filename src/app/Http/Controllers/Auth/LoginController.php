@@ -27,31 +27,21 @@ class LoginController extends Controller
                 'name' => 'username',
                 'label' => 'What is your username?',
                 'hint' => 'The username you use to access your Windows device, such as jdoe3.',
+                'width' => 20,
             ],
             [
                 'name' => 'password',
                 'label' => 'What is your password?',
                 'hint' => 'The password you use to access your Windows device.',
+                'type' => 'password',
+                'width' => 20,
             ],
         ];
 
         return $view === 'gov-uk-login'
             ? GovukPage::questions(
                 'Sign in',
-                [
-                    [
-                        'label' => $questions[0]['label'],
-                        'name' => $questions[0]['name'],
-                        'hint' => $questions[0]['hint'],
-                        'width' => 20,
-                    ],
-                    [
-                        'label' => $questions[1]['label'],
-                        'name' => $questions[1]['name'],
-                        'hint' => $questions[1]['hint'],
-                        'width' => 20,
-                    ],
-                ],
+                $questions,
                 $buttonLabel,
                 $action,
                 null,
