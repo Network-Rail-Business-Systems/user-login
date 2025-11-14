@@ -61,11 +61,14 @@ class IndexTest extends TestCase
                     'name' => 'username',
                     'label' => 'What is your username?',
                     'hint' => 'The username you use to access your Windows device, such as jdoe3.',
+                    'width' => 20,
                 ],
                 [
                     'name' => 'password',
                     'label' => 'What is your password?',
                     'hint' => 'The password you use to access your Windows device.',
+                    'type' => 'password',
+                    'width' => 20,
                 ]],
             $this->response->getData()['questions'],
         );
